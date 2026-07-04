@@ -35,6 +35,15 @@ class TransactionResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'description';
 
+    protected static ?string $modelLabel = 'transaction';
+
+    public static function getModelLabel(): string
+    {
+        $modelLabel = static::$modelLabel;
+
+        return translate($modelLabel);
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -59,34 +68,34 @@ class TransactionResource extends Resource
             ->columns([
                 Columns::id(),
                 Tables\Columns\TextColumn::make('posted_at')
-                    ->label('Date')
+                    ->label(translate('Date'))
                     ->sortable()
                     ->defaultDateFormat(),
                 Tables\Columns\TextColumn::make('type')
-                    ->label('Type')
+                    ->label(translate('Type'))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Description')
+                    ->label(translate('Description'))
                     ->limit(50)
                     ->searchable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('payeeable.name')
-                    ->label('Payee')
+                    ->label(translate('Payee'))
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('bankAccount.account.name')
-                    ->label('Account')
+                    ->label(translate('Account'))
                     ->searchable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('account.name')
-                    ->label('Category')
+                    ->label(translate('Category'))
                     ->prefix(static fn (Transaction $transaction) => $transaction->type->isTransfer() ? 'Transfer to ' : null)
                     ->searchable()
                     ->toggleable()
                     ->state(static fn (Transaction $transaction) => $transaction->account->name ?? 'Journal Entry'),
                 Tables\Columns\TextColumn::make('amount')
-                    ->label('Amount')
+                    ->label(translate('Amount'))
                     ->weight(static fn (Transaction $transaction) => $transaction->reviewed ? null : FontWeight::SemiBold)
                     ->color(
                         static fn (Transaction $transaction) => match ($transaction->type) {
@@ -101,25 +110,25 @@ class TransactionResource extends Resource
             ->defaultSort('posted_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('bank_account_id')
-                    ->label('Account')
+                    ->label(translate('Account'))
                     ->searchable()
                     ->options(static fn () => Transaction::getBankAccountOptions(excludeArchived: false)),
                 Tables\Filters\SelectFilter::make('account_id')
-                    ->label('Category')
+                    ->label(translate('Category'))
                     ->multiple()
                     ->options(static fn () => Transaction::getChartAccountOptions()),
                 Tables\Filters\TernaryFilter::make('reviewed')
-                    ->label('Status')
-                    ->trueLabel('Reviewed')
-                    ->falseLabel('Not Reviewed'),
+                    ->label(translate('Status'))
+                    ->trueLabel(translate('Reviewed'))
+                    ->falseLabel(translate('Not Reviewed')),
                 Tables\Filters\SelectFilter::make('type')
-                    ->label('Type')
+                    ->label(translate('Type'))
                     ->options(TransactionType::class),
                 Tables\Filters\TernaryFilter::make('is_payment')
-                    ->label('Payment')
+                    ->label(translate('Payment'))
                     ->default(false),
                 Tables\Filters\SelectFilter::make('payee')
-                    ->label('Payee')
+                    ->label(translate('Payee'))
                     ->options(static fn () => Transaction::getPayeeOptions())
                     ->searchable()
                     ->query(function (Builder $query, array $data): Builder {
@@ -162,7 +171,7 @@ class TransactionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\Action::make('markAsReviewed')
-                    ->label('Mark as reviewed')
+                    ->label(translate('Mark as reviewed'))
                     ->view('filament.company.components.tables.actions.mark-as-reviewed')
                     ->icon(static fn (Transaction $transaction) => $transaction->reviewed ? 'heroicon-s-check-circle' : 'heroicon-o-check-circle')
                     ->color(static fn (Transaction $transaction, Tables\Actions\Action $action) => match (static::determineTransactionState($transaction, $action)) {
@@ -204,11 +213,11 @@ class TransactionResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     ReplicateBulkAction::make()
-                        ->label('Replicate')
+                        ->label(translate('Replicate'))
                         ->modalWidth(MaxWidth::Large)
-                        ->modalDescription('Replicating transactions will also replicate their journal entries. Are you sure you want to proceed?')
-                        ->successNotificationTitle('Transactions replicated successfully')
-                        ->failureNotificationTitle('Failed to replicate transactions')
+                        ->modalDescription(translate('Replicating transactions will also replicate their journal entries. Are you sure you want to proceed?'))
+                        ->successNotificationTitle(translate('Transactions replicated successfully'))
+                        ->failureNotificationTitle(translate('Failed to replicate transactions'))
                         ->deselectRecordsAfterCompletion()
                         ->excludeAttributes(['created_by', 'updated_by', 'created_at', 'updated_at'])
                         ->beforeReplicaSaved(static function (Transaction $replica) {
@@ -219,8 +228,8 @@ class TransactionResource extends Resource
 
                             if ($isInvalid) {
                                 Notification::make()
-                                    ->title('Cannot replicate transactions')
-                                    ->body('You cannot replicate transactions associated with bills or invoices')
+                                    ->title(translate('Cannot replicate transactions'))
+                                    ->body(translate('You cannot replicate transactions associated with bills or invoices'))
                                     ->persistent()
                                     ->danger()
                                     ->send();
@@ -262,7 +271,7 @@ class TransactionResource extends Resource
                         DateRangeSelect::make("{$fieldPrefix}_date_range")
                             ->label($label)
                             ->selectablePlaceholder(false)
-                            ->placeholder('Select a date range')
+                            ->placeholder(translate('Select a date range'))
                             ->startDateField("{$fieldPrefix}_start_date")
                             ->endDateField("{$fieldPrefix}_end_date"),
                         DatePicker::make("{$fieldPrefix}_start_date")

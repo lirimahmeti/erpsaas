@@ -109,7 +109,10 @@ class Localization extends Model
 
     public static function getAllLanguages(): array
     {
-        return Transmatic::getSupportedLanguages();
+        return array_merge(
+            Transmatic::getSupportedLanguages(),
+            ['sq' => 'Albanian'],
+        );
     }
 
     public static function newFactory(): Factory

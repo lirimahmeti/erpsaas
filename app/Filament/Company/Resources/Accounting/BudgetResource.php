@@ -32,18 +32,27 @@ class BudgetResource extends Resource
 
     protected static bool $isGloballySearchable = false;
 
+    protected static ?string $modelLabel = 'budget';
+
+    public static function getModelLabel(): string
+    {
+        $modelLabel = static::$modelLabel;
+
+        return translate($modelLabel);
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Budget Details')
+                Forms\Components\Section::make(translate('Budget Details'))
                     ->columns()
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255),
                         Forms\Components\Select::make('interval_type')
-                            ->label('Budget Interval')
+                            ->label(translate('Budget Interval'))
                             ->options(BudgetIntervalType::class)
                             ->default(BudgetIntervalType::Month->value)
                             ->required()
@@ -218,22 +227,22 @@ class BudgetResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('status')
-                    ->label('Status')
+                    ->label(translate('Status'))
                     ->sortable()
                     ->badge(),
 
                 Tables\Columns\TextColumn::make('interval_type')
-                    ->label('Interval')
+                    ->label(translate('Interval'))
                     ->sortable()
                     ->badge(),
 
                 Tables\Columns\TextColumn::make('start_date')
-                    ->label('Start Date')
+                    ->label(translate('Start Date'))
                     ->date()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('end_date')
-                    ->label('End Date')
+                    ->label(translate('End Date'))
                     ->date()
                     ->sortable(),
             ])
@@ -246,21 +255,21 @@ class BudgetResource extends Resource
                     Tables\Actions\EditAction::make('editAllocations')
                         ->name('editAllocations')
                         ->url(null)
-                        ->label('Edit Allocations')
+                        ->label(translate('Edit Allocations'))
                         ->icon('heroicon-o-table-cells')
                         ->modalWidth(MaxWidth::Screen)
-                        ->modalHeading('Edit Budget Allocations')
-                        ->modalDescription('Update the allocations for this budget')
+                        ->modalHeading(translate('Edit Budget Allocations'))
+                        ->modalDescription(translate('Update the allocations for this budget'))
                         ->slideOver()
                         ->form(function (Budget $record) {
                             $periods = $record->getPeriods();
 
                             $headers = [
                                 Header::make('Account')
-                                    ->label('Account')
+                                    ->label(translate('Account'))
                                     ->width('200px'),
                                 Header::make('total')
-                                    ->label('Total')
+                                    ->label(translate('Total'))
                                     ->width('120px')
                                     ->align(Alignment::Right),
                                 Header::make('action')
@@ -304,7 +313,7 @@ class BudgetResource extends Resource
 
                                         Forms\Components\Actions::make([
                                             Forms\Components\Actions\Action::make('disperse')
-                                                ->label('Disperse')
+                                                ->label(translate('Disperse'))
                                                 ->icon('heroicon-m-chevron-double-right')
                                                 ->color('primary')
                                                 ->iconButton()

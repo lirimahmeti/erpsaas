@@ -120,7 +120,7 @@ class Localization extends Page
 
     protected function getGeneralSection(): Component
     {
-        return Section::make('General')
+        return Section::make(translate('General'))
             ->schema([
                 Select::make('language')
                     ->softRequired()
@@ -138,7 +138,7 @@ class Localization extends Page
 
     protected function getDateAndTimeSection(): Component
     {
-        return Section::make('Date & Time')
+        return Section::make(translate('Date & Time'))
             ->schema([
                 Select::make('date_format')
                     ->softRequired()
@@ -162,7 +162,7 @@ class Localization extends Page
         $afterNumber = translate('After number');
         $selectPosition = translate('Select position');
 
-        return Section::make('Financial & Fiscal')
+        return Section::make(translate('Financial & Fiscal'))
             ->schema([
                 Select::make('number_format')
                     ->softRequired()
@@ -182,7 +182,7 @@ class Localization extends Page
                                 ->columnSpan(2)
                                 ->live(),
                             Select::make('fiscal_year_end_day')
-                                ->placeholder('Day')
+                                ->placeholder(translate('Day'))
                                 ->softRequired()
                                 ->columnSpan(1)
                                 ->options(function (Get $get) {
@@ -198,7 +198,7 @@ class Localization extends Page
                             ->columnSpan(2)
                             ->required()
                             ->markAsRequired(false)
-                            ->label('Fiscal year end'),
+                            ->label(translate('Fiscal year end')),
                     ])->columns(3),
             ])->columns();
     }

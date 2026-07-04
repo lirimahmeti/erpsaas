@@ -23,7 +23,11 @@ class AccountCode
     {
         $range = self::getRangeForType($type);
 
-        return "The account code must range from {$range[0]} to {$range[1]} for a {$type->getLabel()}.";
+        return translate('The account code must range from :start to :end for a :type.', [
+            'start' => $range[0],
+            'end' => $range[1],
+            'type' => $type->getLabel(),
+        ]);
     }
 
     public static function getRangeForType(AccountType $type): array

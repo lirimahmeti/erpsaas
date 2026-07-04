@@ -52,12 +52,12 @@ class RecordPayments extends ListRecords
 
     public function getBreadcrumb(): ?string
     {
-        return 'Record Payments';
+        return translate('Record Payments');
     }
 
     public function getTitle(): string | Htmlable
     {
-        return 'Record Payments';
+        return translate('Record Payments');
     }
 
     public function getMaxContentWidth(): MaxWidth | string | null
@@ -93,14 +93,18 @@ class RecordPayments extends ListRecords
             Actions\Action::make('processPayments')
                 ->color('primary')
                 ->requiresConfirmation()
-                ->modalHeading('Confirm payments')
+                ->modalHeading(translate('Confirm payments'))
                 ->modalDescription(function () {
                     $invoiceCount = collect($this->paymentAmounts)->filter(fn ($amount) => $amount > 0)->count();
                     $totalAmount = array_sum($this->paymentAmounts);
                     $currencyCode = $this->getTableFilterState('currency_code')['value'];
                     $totalFormatted = CurrencyConverter::formatCentsToMoney($totalAmount, $currencyCode, true);
 
-                    return "You are about to pay {$invoiceCount} " . Str::plural('invoice', $invoiceCount) . " for a total of {$totalFormatted}. This action cannot be undone.";
+                    return translate('You are about to pay :count :record for a total of :total. This action cannot be undone.', [
+                        'count' => $invoiceCount,
+                        'record' => translate(Str::plural('invoice', $invoiceCount)),
+                        'total' => $totalFormatted,
+                    ]);
                 })
                 ->action(function () {
                     $data = $this->data;
@@ -137,8 +141,12 @@ class RecordPayments extends ListRecords
                     $totalFormatted = CurrencyConverter::formatCentsToMoney($totalPaid, $currencyCode, true);
 
                     Notification::make()
-                        ->title('Payments recorded successfully')
-                        ->body("Recorded {$paidCount} " . Str::plural('payment', $paidCount) . " for a total of {$totalFormatted}")
+                        ->title(translate('Payments recorded successfully'))
+                        ->body(translate('Recorded :count :record for a total of :total', [
+                            'count' => $paidCount,
+                            'record' => translate(Str::plural('payment', $paidCount)),
+                            'total' => $totalFormatted,
+                        ]))
                         ->success()
                         ->send();
 
@@ -191,7 +199,7 @@ class RecordPayments extends ListRecords
                 Forms\Components\Grid::make(2) // Changed from 3 to 4
                     ->schema([
                         Forms\Components\Select::make('bank_account_id')
-                            ->label('Account')
+                            ->label(translate('Account'))
                             ->options(static function () {
                                 return Transaction::getBankAccountOptionsFlat();
                             })
@@ -200,17 +208,17 @@ class RecordPayments extends ListRecords
                             ->searchable()
                             ->softRequired(),
                         Forms\Components\DatePicker::make('posted_at')
-                            ->label('Date')
+                            ->label(translate('Date'))
                             ->default(company_today()->toDateString())
                             ->softRequired(),
                         Forms\Components\Select::make('payment_method')
-                            ->label('Payment method')
+                            ->label(translate('Payment method'))
                             ->selectablePlaceholder(false)
                             ->options(PaymentMethod::class)
                             ->default(PaymentMethod::BankPayment)
                             ->softRequired(),
                         Forms\Components\TextInput::make('allocation_amount')
-                            ->label('Allocate Payment Amount')
+                            ->label(translate('Allocate Payment Amount'))
                             ->default(array_sum($this->paymentAmounts))
                             ->money($this->getTableFilterState('currency_code')['value'])
                             ->extraAlpineAttributes([
@@ -244,24 +252,24 @@ class RecordPayments extends ListRecords
             ->recordClasses(['is-spreadsheet'])
             ->defaultSort('due_date')
             ->paginated(false)
-            ->emptyStateHeading('No client selected')
-            ->emptyStateDescription('Select a client from the filters above to view and process invoice payments.')
+            ->emptyStateHeading(translate('No client selected'))
+            ->emptyStateDescription(translate('Select a client from the filters above to view and process invoice payments.'))
             ->columns([
                 TextColumn::make('client.name')
-                    ->label('Client')
+                    ->label(translate('Client'))
                     ->sortable(),
                 TextColumn::make('invoice_number')
-                    ->label('Invoice number')
+                    ->label(translate('Invoice number'))
                     ->sortable(),
                 TextColumn::make('due_date')
-                    ->label('Due date')
+                    ->label(translate('Due date'))
                     ->defaultDateFormat()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->sortable(),
                 TextColumn::make('amount_due')
-                    ->label('Amount due')
+                    ->label(translate('Amount due'))
                     ->currency(static fn (Invoice $record) => $record->currency_code)
                     ->alignEnd()
                     ->sortable()
@@ -299,7 +307,7 @@ class RecordPayments extends ListRecords
                     ->default('')
                     ->alignCenter()
                     ->width('3rem')
-                    ->tooltip('Apply full amount')
+                    ->tooltip(translate('Apply full amount'))
                     ->action(
                         Tables\Actions\Action::make('applyFullPayment')
                             ->action(function (Invoice $record) {
@@ -307,7 +315,7 @@ class RecordPayments extends ListRecords
                             }),
                     ),
                 CustomTextInputColumn::make('payment_amount')
-                    ->label('Payment amount')
+                    ->label(translate('Payment amount'))
                     ->alignEnd()
                     ->navigable()
                     ->mask(RawJs::make('$money($input)'))
@@ -358,7 +366,7 @@ class RecordPayments extends ListRecords
             ])
             ->bulkActions([
                 Tables\Actions\BulkAction::make('applyFullAmounts')
-                    ->label('Apply full amounts')
+                    ->label(translate('Apply full amounts'))
                     ->icon('heroicon-o-banknotes')
                     ->color('primary')
                     ->deselectRecordsAfterCompletion()
@@ -368,7 +376,7 @@ class RecordPayments extends ListRecords
                         });
                     }),
                 Tables\Actions\BulkAction::make('clearAmounts')
-                    ->label('Clear amounts')
+                    ->label(translate('Clear amounts'))
                     ->icon('heroicon-o-x-mark')
                     ->color('gray')
                     ->deselectRecordsAfterCompletion()
@@ -380,7 +388,7 @@ class RecordPayments extends ListRecords
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('currency_code')
-                    ->label('Currency')
+                    ->label(translate('Currency'))
                     ->selectablePlaceholder(false)
                     ->default(CurrencyAccessor::getDefaultCurrency())
                     ->options(Currency::query()->pluck('name', 'code')->toArray())
@@ -406,7 +414,7 @@ class RecordPayments extends ListRecords
                         return Tables\Filters\Indicator::make("{$indicator}: {$label}")->removable(false);
                     }),
                 Tables\Filters\SelectFilter::make('client_id')
-                    ->label('Client')
+                    ->label(translate('Client'))
                     ->selectablePlaceholder(false)
                     ->options(fn () => Client::query()->pluck('name', 'id')->toArray())
                     ->searchable()
@@ -418,11 +426,11 @@ class RecordPayments extends ListRecords
                         return $query->where('client_id', $data['value']);
                     }),
                 Tables\Filters\Filter::make('invoice_lookup')
-                    ->label('Find Invoice')
+                    ->label(translate('Find Invoice'))
                     ->form([
                         Forms\Components\TextInput::make('invoice_number')
-                            ->label('Invoice Number')
-                            ->placeholder('Enter invoice number')
+                            ->label(translate('Invoice Number'))
+                            ->placeholder(translate('Enter invoice number'))
                             ->suffixAction(
                                 Forms\Components\Actions\Action::make('findInvoice')
                                     ->icon('heroicon-m-magnifying-glass')
@@ -441,14 +449,19 @@ class RecordPayments extends ListRecords
                                             $this->paymentAmounts[$invoice->id] = $invoice->amount_due;
 
                                             Notification::make()
-                                                ->title('Invoice found')
-                                                ->body("Found invoice {$invoice->invoice_number} for {$invoice->client->name}")
+                                                ->title(translate('Invoice found'))
+                                                ->body(translate('Found invoice :invoice for :client', [
+                                                    'invoice' => $invoice->invoice_number,
+                                                    'client' => $invoice->client->name,
+                                                ]))
                                                 ->success()
                                                 ->send();
                                         } else {
                                             Notification::make()
-                                                ->title('Invoice not found')
-                                                ->body("No unpaid invoice found with number: {$state}")
+                                                ->title(translate('Invoice not found'))
+                                                ->body(translate('No unpaid invoice found with number: :number', [
+                                                    'number' => $state,
+                                                ]))
                                                 ->warning()
                                                 ->send();
                                         }

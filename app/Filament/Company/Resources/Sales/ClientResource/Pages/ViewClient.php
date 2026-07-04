@@ -40,26 +40,26 @@ class ViewClient extends ViewRecord
     {
         return [
             EditAction::make()
-                ->label('Edit client')
+                ->label(translate('Edit client'))
                 ->outlined(),
             ActionGroup::make([
                 ActionGroup::make([
                     Action::make('newInvoice')
-                        ->label('New invoice')
+                        ->label(translate('New invoice'))
                         ->icon('heroicon-m-document-plus')
                         ->url(CreateInvoice::getUrl(['client' => $this->record->getKey()])),
                     Action::make('newEstimate')
-                        ->label('New estimate')
+                        ->label(translate('New estimate'))
                         ->icon('heroicon-m-document-duplicate')
                         ->url(CreateEstimate::getUrl(['client' => $this->record->getKey()])),
                     Action::make('newRecurringInvoice')
-                        ->label('New recurring invoice')
+                        ->label(translate('New recurring invoice'))
                         ->icon('heroicon-m-arrow-path')
                         ->url(CreateRecurringInvoice::getUrl(['client' => $this->record->getKey()])),
                 ])->dropdown(false),
                 DeleteAction::make(),
             ])
-                ->label('Actions')
+                ->label(translate('Actions'))
                 ->button()
                 ->outlined()
                 ->dropdownPlacement('bottom-end')
@@ -79,31 +79,31 @@ class ViewClient extends ViewRecord
     {
         return $infolist
             ->schema([
-                Section::make('General')
+                Section::make(translate('General'))
                     ->columns()
                     ->schema([
                         TextEntry::make('primaryContact.full_name')
-                            ->label('Primary contact'),
+                            ->label(translate('Primary contact')),
                         TextEntry::make('primaryContact.email')
-                            ->label('Primary email'),
+                            ->label(translate('Primary email')),
                         TextEntry::make('primaryContact.first_available_phone')
-                            ->label('Primary phone'),
+                            ->label(translate('Primary phone')),
                         TextEntry::make('website')
-                            ->label('Website')
+                            ->label(translate('Website'))
                             ->url(static fn ($state) => $state, true)
                             ->link(),
                     ]),
-                Section::make('Additional Details')
+                Section::make(translate('Additional Details'))
                     ->columns()
                     ->schema([
                         TextEntry::make('billingAddress.address_string')
-                            ->label('Billing address')
+                            ->label(translate('Billing address'))
                             ->listWithLineBreaks(),
                         TextEntry::make('shippingAddress.address_string')
-                            ->label('Shipping address')
+                            ->label(translate('Shipping address'))
                             ->listWithLineBreaks(),
                         TextEntry::make('notes')
-                            ->label('Delivery instructions'),
+                            ->label(translate('Delivery instructions')),
                     ]),
             ]);
     }

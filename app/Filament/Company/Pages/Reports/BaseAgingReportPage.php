@@ -53,7 +53,7 @@ abstract class BaseAgingReportPage extends BaseReportPage
                 ->label($this->getEntityType()->getLabel())
                 ->alignment(Alignment::Left),
             Column::make('current')
-                ->label('Current')
+                ->label(translate('Current'))
                 ->alignment(Alignment::Right),
         ];
 
@@ -71,7 +71,7 @@ abstract class BaseAgingReportPage extends BaseReportPage
             ->alignment(Alignment::Right);
 
         $columns[] = Column::make('total')
-            ->label('Total')
+            ->label(translate('Total'))
             ->alignment(Alignment::Right);
 
         return $columns;
@@ -83,18 +83,18 @@ abstract class BaseAgingReportPage extends BaseReportPage
             ->columns(4)
             ->schema([
                 DateRangeSelect::make('dateRange')
-                    ->label('As of')
+                    ->label(translate('As of'))
                     ->selectablePlaceholder(false)
                     ->endDateField('asOfDate'),
                 $this->getAsOfDateFormComponent(),
                 TextInput::make('days_per_period')
-                    ->label('Days per period')
+                    ->label(translate('Days per period'))
                     ->integer()
                     ->mask(RawJs::make(<<<'JS'
                         $input > 365 ? '365' : '999'
                     JS)),
                 TextInput::make('number_of_periods')
-                    ->label('Number of periods')
+                    ->label(translate('Number of periods'))
                     ->integer()
                     ->mask(RawJs::make(<<<'JS'
                         $input > 10 ? '10' : '99'

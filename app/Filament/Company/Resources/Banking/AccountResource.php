@@ -38,7 +38,7 @@ class AccountResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Account Information')
+                Forms\Components\Section::make(translate('Account Information'))
                     ->schema([
                         Forms\Components\Select::make('type')
                             ->options(BankAccountType::class)
@@ -145,7 +145,7 @@ class AccountResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
                         ->requiresConfirmation()
-                        ->modalDescription('Are you sure you want to delete the selected accounts? All transactions associated with the accounts will be deleted as well.')
+                        ->modalDescription(translate('Are you sure you want to delete the selected accounts? All transactions associated with the accounts will be deleted as well.'))
                         ->hidden(function (Table $table) {
                             return $table->getAllSelectableRecordsCount() === 0;
                         }),

@@ -68,7 +68,7 @@ class ListInvoices extends ListRecords
                     ->visible(fn () => ! empty($this->recurringInvoice))
                     ->actions([
                         Action::make('clearFilter')
-                            ->label('Clear filter')
+                            ->label(translate('Clear filter'))
                             ->button()
                             ->outlined()
                             ->action('clearFilter'),
@@ -108,16 +108,16 @@ class ListInvoices extends ListRecords
     {
         return [
             'all' => Tab::make()
-                ->label('All'),
+                ->label(translate('All')),
 
             'unpaid' => Tab::make()
-                ->label('Unpaid')
+                ->label(translate('Unpaid'))
                 ->modifyQueryUsing(function (Builder $query) {
                     $query->unpaid();
                 }),
 
             'draft' => Tab::make()
-                ->label('Draft')
+                ->label(translate('Draft'))
                 ->modifyQueryUsing(function (Builder $query) {
                     $query->where('status', InvoiceStatus::Draft);
                 }),

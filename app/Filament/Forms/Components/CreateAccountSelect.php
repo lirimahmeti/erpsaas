@@ -109,7 +109,7 @@ class CreateAccountSelect extends Select
     {
         return [
             Select::make('subtype_id')
-                ->label('Type')
+                ->label(translate('Type'))
                 ->required()
                 ->live()
                 ->searchable()
@@ -141,27 +141,27 @@ class CreateAccountSelect extends Select
                 }),
 
             TextInput::make('code')
-                ->label('Code')
+                ->label(translate('Code'))
                 ->required()
                 ->validationAttribute('account code')
                 ->unique(table: Account::class, column: 'code')
                 ->validateAccountCode(static fn (Get $get) => $get('subtype_id')),
 
             TextInput::make('name')
-                ->label('Name')
+                ->label(translate('Name'))
                 ->required(),
 
             Textarea::make('description')
-                ->label('Description'),
+                ->label(translate('Description')),
         ];
     }
 
     protected function createAccountAction(Action $action): Action
     {
         return $action
-            ->label('Create Account')
+            ->label(translate('Create Account'))
             ->slideOver()
             ->modalWidth(MaxWidth::Large)
-            ->modalHeading('Create a new account');
+            ->modalHeading(translate('Create a new account'));
     }
 }

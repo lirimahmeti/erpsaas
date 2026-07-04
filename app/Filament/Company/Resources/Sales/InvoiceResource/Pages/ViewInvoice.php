@@ -29,7 +29,7 @@ class ViewInvoice extends ViewRecord
     {
         return [
             Actions\EditAction::make()
-                ->label('Edit invoice')
+                ->label(translate('Edit invoice'))
                 ->outlined(),
             Actions\ActionGroup::make([
                 Actions\ActionGroup::make([
@@ -40,7 +40,7 @@ class ViewInvoice extends ViewRecord
                 ])->dropdown(false),
                 Actions\DeleteAction::make(),
             ])
-                ->label('Actions')
+                ->label(translate('Actions'))
                 ->button()
                 ->outlined()
                 ->dropdownPlacement('bottom-end')
@@ -54,7 +54,7 @@ class ViewInvoice extends ViewRecord
         return $infolist
             ->schema([
                 BannerEntry::make('inactiveAdjustments')
-                    ->label('Inactive adjustments')
+                    ->label(translate('Inactive adjustments'))
                     ->warning()
                     ->icon('heroicon-o-exclamation-triangle')
                     ->visible(fn (Invoice $record) => $record->hasInactiveAdjustments() && $record->canBeApproved())
@@ -78,33 +78,33 @@ class ViewInvoice extends ViewRecord
 
                         return new HtmlString($output);
                     }),
-                Section::make('Invoice Details')
+                Section::make(translate('Invoice Details'))
                     ->columns(4)
                     ->schema([
                         Grid::make(1)
                             ->schema([
                                 TextEntry::make('invoice_number')
-                                    ->label('Invoice #'),
+                                    ->label(translate('Invoice #')),
                                 TextEntry::make('status')
                                     ->badge(),
                                 TextEntry::make('client.name')
-                                    ->label('Client')
+                                    ->label(translate('Client'))
                                     ->url(static fn (Invoice $record) => $record->client_id ? ClientResource::getUrl('view', ['record' => $record->client_id]) : null)
                                     ->link(),
                                 TextEntry::make('amount_due')
-                                    ->label('Amount due')
+                                    ->label(translate('Amount due'))
                                     ->currency(static fn (Invoice $record) => $record->currency_code),
                                 TextEntry::make('due_date')
-                                    ->label('Due')
+                                    ->label(translate('Due'))
                                     ->asRelativeDay(),
                                 TextEntry::make('approved_at')
-                                    ->label('Approved at')
+                                    ->label(translate('Approved at'))
                                     ->date(),
                                 TextEntry::make('last_sent_at')
-                                    ->label('Last sent')
+                                    ->label(translate('Last sent'))
                                     ->date(),
                                 TextEntry::make('paid_at')
-                                    ->label('Paid at')
+                                    ->label(translate('Paid at'))
                                     ->date(),
                             ])->columnSpan(1),
                         DocumentPreview::make()

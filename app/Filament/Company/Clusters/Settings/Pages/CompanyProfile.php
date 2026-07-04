@@ -113,11 +113,11 @@ class CompanyProfile extends Page
     {
         return Notification::make()
             ->info()
-            ->title('Timezone update required')
-            ->body('You have changed your country or state. Please update your timezone to ensure accurate date and time information.')
+            ->title(translate('Timezone update required'))
+            ->body(translate('You have changed your country or state. Please update your timezone to ensure accurate date and time information.'))
             ->actions([
                 \Filament\Notifications\Actions\Action::make('updateTimezone')
-                    ->label('Update timezone')
+                    ->label(translate('Update timezone'))
                     ->url(Localization::getUrl()),
             ])
             ->persistent()
@@ -147,7 +147,7 @@ class CompanyProfile extends Page
 
     protected function getIdentificationSection(): Component
     {
-        return Section::make('Identification')
+        return Section::make(translate('Identification'))
             ->schema([
                 Group::make()
                     ->schema([
@@ -187,15 +187,15 @@ class CompanyProfile extends Page
     {
         return Banner::make('needsAddressCompletion')
             ->warning()
-            ->title('Address information incomplete')
-            ->description('Please complete the required address information for proper business operations.')
+            ->title(translate('Address information incomplete'))
+            ->description(translate('Please complete the required address information for proper business operations.'))
             ->visible(fn (CompanyProfileModel $record) => $record->address->isIncomplete())
             ->columnSpanFull();
     }
 
     protected function getLocationDetailsSection(): Component
     {
-        return Section::make('Address Information')
+        return Section::make(translate('Address Information'))
             ->relationship('address')
             ->schema([
                 Hidden::make('type')
@@ -210,7 +210,7 @@ class CompanyProfile extends Page
 
     protected function getLegalAndComplianceSection(): Component
     {
-        return Section::make('Legal & Compliance')
+        return Section::make(translate('Legal & Compliance'))
             ->schema([
                 Select::make('entity_type')
                     ->localizeLabel()

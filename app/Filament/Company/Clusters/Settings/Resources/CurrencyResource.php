@@ -33,7 +33,7 @@ class CurrencyResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('General')
+                Forms\Components\Section::make(translate('General'))
                     ->schema([
                         Forms\Components\Select::make('code')
                             ->options(CurrencyAccessor::getAvailableCurrencies())

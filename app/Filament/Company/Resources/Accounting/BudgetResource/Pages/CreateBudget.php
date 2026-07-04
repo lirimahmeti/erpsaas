@@ -110,7 +110,7 @@ class CreateBudget extends CreateRecord
                         ->required()
                         ->maxLength(255),
                     Forms\Components\Select::make('interval_type')
-                        ->label('Budget Interval')
+                        ->label(translate('Budget Interval'))
                         ->options(BudgetIntervalType::class)
                         ->default(BudgetIntervalType::Month->value)
                         ->required()
@@ -138,22 +138,22 @@ class CreateBudget extends CreateRecord
                 ->schema([
                     // Prefill configuration
                     Forms\Components\Toggle::make('prefill_data')
-                        ->label('Prefill Data')
-                        ->helperText('Enable this option to prefill the budget with historical data')
+                        ->label(translate('Prefill Data'))
+                        ->helperText(translate('Enable this option to prefill the budget with historical data'))
                         ->default(false)
                         ->live(),
 
                     Forms\Components\Grid::make(1)
                         ->schema([
                             Forms\Components\Select::make('source_type')
-                                ->label('Prefill Method')
+                                ->label(translate('Prefill Method'))
                                 ->options(BudgetSourceType::class)
                                 ->live()
                                 ->required(),
 
                             // If user selects to copy a previous budget
                             Forms\Components\Select::make('source_budget_id')
-                                ->label('Source Budget')
+                                ->label(translate('Source Budget'))
                                 ->options(fn () => Budget::query()
                                     ->orderByDesc('end_date')
                                     ->pluck('name', 'id'))
@@ -163,7 +163,7 @@ class CreateBudget extends CreateRecord
 
                             // If user selects to use historical actuals
                             Forms\Components\Select::make('source_fiscal_year')
-                                ->label('Fiscal Year')
+                                ->label(translate('Fiscal Year'))
                                 ->options(function () {
                                     $options = [];
                                     $company = auth()->user()->currentCompany;
@@ -194,15 +194,17 @@ class CreateBudget extends CreateRecord
                                 ->visible(fn (Forms\Get $get) => BudgetSourceType::parse($get('source_type'))?->isActuals()),
                         ])->visible(fn (Forms\Get $get) => $get('prefill_data') === true),
 
-                    CustomSection::make('Account Selection')
+                    CustomSection::make(translate('Account Selection'))
                         ->contained(false)
                         ->schema([
                             Forms\Components\Checkbox::make('exclude_accounts_without_actuals')
-                                ->label('Exclude all accounts without actuals')
+                                ->label(translate('Exclude all accounts without actuals'))
                                 ->helperText(function () {
                                     $count = $this->getAccountsWithoutActuals()->count();
 
-                                    return "Will exclude {$count} accounts without transaction data in the selected fiscal year";
+                                    return translate('Will exclude :count accounts without transaction data in the selected fiscal year', [
+                                        'count' => $count,
+                                    ]);
                                 })
                                 ->default(true)
                                 ->live()
@@ -218,7 +220,7 @@ class CreateBudget extends CreateRecord
                                 }),
 
                             Forms\Components\CheckboxList::make('selected_accounts')
-                                ->label('Select Accounts to Exclude')
+                                ->label(translate('Select Accounts to Exclude'))
                                 ->options(function () {
                                     // Get all budgetable accounts
                                     return $this->getBudgetableAccounts()->pluck('name', 'id')->toArray();
@@ -269,8 +271,8 @@ class CreateBudget extends CreateRecord
                                 ->columns(2) // Display in two columns
                                 ->searchable() // Allow searching for accounts
                                 ->bulkToggleable() // Enable "Select All" / "Deselect All"
-                                ->selectAllAction(fn (Action $action) => $action->label('Exclude all accounts'))
-                                ->deselectAllAction(fn (Action $action) => $action->label('Include all accounts'))
+                                ->selectAllAction(fn (Action $action) => $action->label(translate('Exclude all accounts')))
+                                ->deselectAllAction(fn (Action $action) => $action->label(translate('Include all accounts')))
                                 ->afterStateUpdated(function (Forms\Set $set, $state) {
                                     // Get all accounts without actuals
                                     $accountsWithoutActuals = $this->getAccountsWithoutActuals()->pluck('id')->toArray();
@@ -294,7 +296,7 @@ class CreateBudget extends CreateRecord
                         }),
 
                     Forms\Components\Textarea::make('notes')
-                        ->label('Notes')
+                        ->label(translate('Notes'))
                         ->columnSpanFull(),
                 ]),
         ];

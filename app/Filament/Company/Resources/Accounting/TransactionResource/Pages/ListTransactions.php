@@ -29,30 +29,30 @@ class ListTransactions extends ListRecords
         return [
             Actions\ActionGroup::make([
                 CreateTransactionAction::make('createDeposit')
-                    ->label('Deposit')
+                    ->label(translate('Deposit'))
                     ->type(TransactionType::Deposit),
                 CreateTransactionAction::make('createWithdrawal')
-                    ->label('Withdrawal')
+                    ->label(translate('Withdrawal'))
                     ->type(TransactionType::Withdrawal),
                 CreateTransactionAction::make('createTransfer')
-                    ->label('Transfer')
+                    ->label(translate('Transfer'))
                     ->type(TransactionType::Transfer),
                 CreateTransactionAction::make('createJournalEntry')
-                    ->label('Journal entry')
+                    ->label(translate('Journal entry'))
                     ->type(TransactionType::Journal),
             ])
-                ->label('New transaction')
+                ->label(translate('New transaction'))
                 ->button()
                 ->dropdownPlacement('bottom-end')
                 ->icon('heroicon-m-chevron-down')
                 ->iconPosition(IconPosition::After),
             Actions\ActionGroup::make([
                 Actions\Action::make('connectBank')
-                    ->label('Connect your bank')
+                    ->label(translate('Connect your bank'))
                     ->visible(app(PlaidService::class)->isEnabled())
                     ->url(ConnectedAccount::getUrl()),
             ])
-                ->label('More')
+                ->label(translate('More'))
                 ->button()
                 ->outlined()
                 ->dropdownPlacement('bottom-end')

@@ -43,16 +43,16 @@ class ListBills extends ListRecords
     {
         return [
             'all' => Tab::make()
-                ->label('All'),
+                ->label(translate('All')),
 
             'unpaid' => Tab::make()
-                ->label('Unpaid')
+                ->label(translate('Unpaid'))
                 ->modifyQueryUsing(function (Builder $query) {
                     $query->unpaid();
                 }),
 
             'paid' => Tab::make()
-                ->label('Paid')
+                ->label(translate('Paid'))
                 ->modifyQueryUsing(function (Builder $query) {
                     $query->where('status', BillStatus::Paid);
                 }),

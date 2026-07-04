@@ -34,30 +34,30 @@ class AccountBalances extends BaseReportPage
     {
         return [
             Column::make('account_code')
-                ->label('ACCOUNT CODE')
+                ->label(translate('ACCOUNT CODE'))
                 ->toggleable(isToggledHiddenByDefault: true)
                 ->alignment(Alignment::Left),
             Column::make('account_name')
-                ->label('ACCOUNT')
+                ->label(translate('ACCOUNT'))
                 ->alignment(Alignment::Left),
             Column::make('starting_balance')
-                ->label('STARTING BALANCE')
+                ->label(translate('STARTING BALANCE'))
                 ->toggleable()
                 ->alignment(Alignment::Right),
             Column::make('debit_balance')
-                ->label('DEBIT')
+                ->label(translate('DEBIT'))
                 ->toggleable()
                 ->alignment(Alignment::Right),
             Column::make('credit_balance')
-                ->label('CREDIT')
+                ->label(translate('CREDIT'))
                 ->toggleable()
                 ->alignment(Alignment::Right),
             Column::make('net_movement')
-                ->label('NET MOVEMENT')
+                ->label(translate('NET MOVEMENT'))
                 ->toggleable()
                 ->alignment(Alignment::Right),
             Column::make('ending_balance')
-                ->label('ENDING BALANCE')
+                ->label(translate('ENDING BALANCE'))
                 ->toggleable()
                 ->alignment(Alignment::Right),
         ];

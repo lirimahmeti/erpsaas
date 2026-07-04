@@ -131,7 +131,7 @@ class UpdateProfileInformation extends Component implements HasForms
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('profile_photo_path')
-                    ->label('Photo')
+                    ->label(translate('Photo'))
                     ->extraAttributes([
                         'style' => 'width: 6rem; height: 6rem;',
                     ])

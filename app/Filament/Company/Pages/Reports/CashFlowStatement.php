@@ -34,11 +34,11 @@ class CashFlowStatement extends BaseReportPage
     {
         return [
             Column::make('account_code')
-                ->label('ACCOUNT CODE')
+                ->label(translate('ACCOUNT CODE'))
                 ->toggleable(isToggledHiddenByDefault: true)
                 ->alignment(Alignment::Left),
             Column::make('account_name')
-                ->label('CASH INFLOWS AND OUTFLOWS')
+                ->label(translate('CASH INFLOWS AND OUTFLOWS'))
                 ->alignment(Alignment::Left),
             Column::make('net_movement')
                 ->label($this->getDisplayDateRange())

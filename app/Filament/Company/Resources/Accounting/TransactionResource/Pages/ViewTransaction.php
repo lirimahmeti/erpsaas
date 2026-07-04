@@ -84,7 +84,7 @@ class ViewTransaction extends ViewRecord
                 ])->dropdown(false),
                 Actions\DeleteAction::make(),
             ])
-                ->label('Actions')
+                ->label(translate('Actions'))
                 ->button()
                 ->outlined()
                 ->dropdownPlacement('bottom-end')
@@ -99,28 +99,28 @@ class ViewTransaction extends ViewRecord
             ->schema([
                 BannerEntry::make('transactionUncategorized')
                     ->warning()
-                    ->title('Transaction uncategorized')
-                    ->description('You must categorize this transaction before you can mark it as reviewed.')
+                    ->title(translate('Transaction uncategorized'))
+                    ->description(translate('You must categorize this transaction before you can mark it as reviewed.'))
                     ->visible(fn (Transaction $record) => $record->isUncategorized())
                     ->columnSpanFull(),
-                Section::make('Transaction Details')
+                Section::make(translate('Transaction Details'))
                     ->columns(3)
                     ->schema([
                         TextEntry::make('posted_at')
-                            ->label('Date')
+                            ->label(translate('Date'))
                             ->date(),
                         TextEntry::make('type')
                             ->badge(),
                         IconEntry::make('is_payment')
-                            ->label('Payment')
+                            ->label(translate('Payment'))
                             ->boolean(),
                         TextEntry::make('description')
-                            ->label('Description'),
+                            ->label(translate('Description')),
                         TextEntry::make('bankAccount.account.name')
-                            ->label('Account')
+                            ->label(translate('Account'))
                             ->hidden(static fn (Transaction $record): bool => ! $record->bankAccount),
                         TextEntry::make('payeeable.name')
-                            ->label('Payee')
+                            ->label(translate('Payee'))
                             ->hidden(static fn (Transaction $record): bool => ! $record->payeeable_type)
                             ->url(static function (Transaction $record): ?string {
                                 if (! $record->payeeable_type || ! $record->payeeable_id) {
@@ -135,18 +135,18 @@ class ViewTransaction extends ViewRecord
                             })
                             ->link(),
                         TextEntry::make('account.name')
-                            ->label('Category')
+                            ->label(translate('Category'))
                             ->hidden(static fn (Transaction $record): bool => ! $record->account),
                         TextEntry::make('amount')
-                            ->label('Amount')
+                            ->label(translate('Amount'))
                             ->currency(static fn (Transaction $record) => $record->bankAccount?->account->currency_code ?? CurrencyAccessor::getDefaultCurrency()),
                         TextEntry::make('reviewed')
-                            ->label('Status')
+                            ->label(translate('Status'))
                             ->badge()
                             ->formatStateUsing(static fn (bool $state): string => $state ? 'Reviewed' : 'Not Reviewed')
                             ->color(static fn (bool $state): string => $state ? 'success' : 'warning'),
                         TextEntry::make('notes')
-                            ->label('Notes')
+                            ->label(translate('Notes'))
                             ->columnSpan(2)
                             ->visible(static fn (Transaction $record): bool => filled($record->notes)),
                     ]),

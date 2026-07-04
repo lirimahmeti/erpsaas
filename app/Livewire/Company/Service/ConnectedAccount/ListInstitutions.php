@@ -64,7 +64,7 @@ class ListInstitutions extends Component implements HasActions, HasForms
         return Action::make('startImportingTransactions')
             ->link()
             ->icon('heroicon-o-cloud-arrow-down')
-            ->label('Start importing transactions')
+            ->label(translate('Start importing transactions'))
             ->modalWidth(fn () => $this->modalWidth)
             ->modalFooterActionsAlignment(fn () => $this->modalWidth === 'screen' ? Alignment::Center : Alignment::Start)
             ->stickyModalHeader()
@@ -72,7 +72,7 @@ class ListInstitutions extends Component implements HasActions, HasForms
             ->record(fn (array $arguments) => ConnectedBankAccount::find($arguments['connectedBankAccount']))
             ->form([
                 Placeholder::make('import_from')
-                    ->label('Import transactions from')
+                    ->label(translate('Import transactions from'))
                     ->content(static fn (ConnectedBankAccount $connectedBankAccount): View => view(
                         'components.actions.transaction-import-modal',
                         compact('connectedBankAccount')
@@ -82,14 +82,14 @@ class ListInstitutions extends Component implements HasActions, HasForms
                     ->visible(static fn (ConnectedBankAccount $connectedBankAccount) => ! $connectedBankAccount->bank_account_id)
                     ->content(static fn (ConnectedBankAccount $connectedBankAccount) => 'If ' . $connectedBankAccount->name . ' already has transactions for an existing account, select the account to import transactions into.'),
                 Select::make('bank_account_id')
-                    ->label('Select account')
+                    ->label(translate('Select account'))
                     ->visible(static fn (ConnectedBankAccount $connectedBankAccount) => ! $connectedBankAccount->bank_account_id)
                     ->options(fn (ConnectedBankAccount $connectedBankAccount) => $this->getBankAccountOptions($connectedBankAccount))
                     ->required(),
                 DatePicker::make('start_date')
-                    ->label('Start date')
+                    ->label(translate('Start date'))
                     ->required()
-                    ->placeholder('Select a start date for importing transactions.')
+                    ->placeholder(translate('Select a start date for importing transactions.'))
                     ->minDate(company_today()->subDays(PlaidService::TRANSACTION_DAYS_REQUESTED)->toDateString())
                     ->maxDate(company_today()->toDateString()),
             ])
@@ -129,13 +129,13 @@ class ListInstitutions extends Component implements HasActions, HasForms
         return Action::make('stopImportingTransactions')
             ->link()
             ->icon('heroicon-o-stop-circle')
-            ->label('Stop importing transactions')
+            ->label(translate('Stop importing transactions'))
             ->color('danger')
             ->requiresConfirmation()
-            ->modalHeading('Stop Importing Transactions')
-            ->modalDescription('Importing transactions automatically helps keep your bookkeeping up to date. Are you sure you want to turn this off?')
-            ->modalSubmitActionLabel('Turn Off')
-            ->modalCancelActionLabel('Keep On')
+            ->modalHeading(translate('Stop Importing Transactions'))
+            ->modalDescription(translate('Importing transactions automatically helps keep your bookkeeping up to date. Are you sure you want to turn this off?'))
+            ->modalSubmitActionLabel(translate('Turn Off'))
+            ->modalCancelActionLabel(translate('Keep On'))
             ->action(function (array $arguments) {
                 $connectedBankAccount = ConnectedBankAccount::find($arguments['connectedBankAccount']);
 
@@ -160,14 +160,14 @@ class ListInstitutions extends Component implements HasActions, HasForms
             ->modalFooterActionsAlignment(fn () => $this->modalWidth === 'screen' ? Alignment::Center : Alignment::Start)
             ->stickyModalHeader()
             ->stickyModalFooter()
-            ->modalHeading('Refresh Transactions')
-            ->modalSubmitActionLabel('Refresh')
+            ->modalHeading(translate('Refresh Transactions'))
+            ->modalSubmitActionLabel(translate('Refresh'))
             ->form([
                 Placeholder::make('modalDetails')
                     ->hiddenLabel()
-                    ->content('Refreshing transactions will update the selected account with the latest transactions from the bank if there are any new transactions available. This may take a few moments.'),
+                    ->content(translate('Refreshing transactions will update the selected account with the latest transactions from the bank if there are any new transactions available. This may take a few moments.')),
                 Select::make('connected_bank_account_id')
-                    ->label('Select account')
+                    ->label(translate('Select account'))
                     ->softRequired()
                     ->selectablePlaceholder(false)
                     ->hint(
@@ -197,7 +197,7 @@ class ListInstitutions extends Component implements HasActions, HasForms
             ->iconButton()
             ->icon('heroicon-o-trash')
             ->color('danger')
-            ->modalHeading('Delete Bank Connection')
+            ->modalHeading(translate('Delete Bank Connection'))
             ->modalWidth(fn () => $this->modalWidth)
             ->modalFooterActionsAlignment(fn () => $this->modalWidth === 'screen' ? Alignment::Center : Alignment::Start)
             ->stickyModalHeader()
@@ -211,7 +211,7 @@ class ListInstitutions extends Component implements HasActions, HasForms
                         compact('institution')
                     )),
                 Checkbox::make('confirm')
-                    ->label('Yes, I want to delete this bank connection.')
+                    ->label(translate('Yes, I want to delete this bank connection.'))
                     ->markAsRequired(false)
                     ->required(),
             ])
@@ -281,7 +281,7 @@ class ListInstitutions extends Component implements HasActions, HasForms
     public function sendErrorNotification(string $message): void
     {
         Notification::make()
-            ->title('Hold on...')
+            ->title(translate('Hold on...'))
             ->danger()
             ->body($message)
             ->persistent()

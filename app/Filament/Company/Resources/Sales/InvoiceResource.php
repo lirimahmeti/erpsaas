@@ -50,6 +50,21 @@ class InvoiceResource extends Resource
 {
     protected static ?string $model = Invoice::class;
 
+    public static function getModelLabel(): string
+    {
+        return translate('invoice');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return translate('invoices');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return translate('Invoices');
+    }
+
     public static function form(Form $form): Form
     {
         $company = Auth::user()->currentCompany;
@@ -58,15 +73,15 @@ class InvoiceResource extends Resource
 
         return $form
             ->schema([
-                DocumentHeaderSection::make('Invoice Header')
+                DocumentHeaderSection::make(translate('Invoice Header'))
                     ->defaultHeader($settings->header)
                     ->defaultSubheader($settings->subheader),
-                Forms\Components\Section::make('Invoice Details')
+                Forms\Components\Section::make(translate('Invoice Details'))
                     ->schema([
                         Forms\Components\Split::make([
                             Forms\Components\Group::make([
                                 CreateClientSelect::make('client_id')
-                                    ->label('Client')
+                                    ->label(translate('Client'))
                                     ->required()
                                     ->live()
                                     ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get, $state) {
@@ -87,13 +102,13 @@ class InvoiceResource extends Resource
                             ]),
                             Forms\Components\Group::make([
                                 Forms\Components\TextInput::make('invoice_number')
-                                    ->label('Invoice number')
+                                    ->label(translate('Invoice number'))
                                     ->default(static fn () => Invoice::getNextDocumentNumber()),
                                 Forms\Components\TextInput::make('order_number')
-                                    ->label('P.O/S.O Number'),
+                                    ->label(translate('P.O/S.O Number')),
                                 Cluster::make([
                                     Forms\Components\DatePicker::make('date')
-                                        ->label('Invoice date')
+                                        ->label(translate('Invoice date'))
                                         ->live()
                                         ->default(company_today()->toDateString())
                                         ->disabled(function (?Invoice $record) {
@@ -116,7 +131,7 @@ class InvoiceResource extends Resource
                                             }
                                         }),
                                     Forms\Components\Select::make('payment_terms')
-                                        ->label('Payment terms')
+                                        ->label(translate('Payment terms'))
                                         ->options(function () {
                                             return collect(PaymentTerms::cases())
                                                 ->mapWithKeys(function (PaymentTerms $paymentTerm) {
@@ -140,10 +155,10 @@ class InvoiceResource extends Resource
                                             }
                                         }),
                                 ])
-                                    ->label('Invoice date')
+                                    ->label(translate('Invoice date'))
                                     ->columns(3),
                                 Forms\Components\DatePicker::make('due_date')
-                                    ->label('Payment due')
+                                    ->label(translate('Payment due'))
                                     ->default(function () use ($settings) {
                                         return company_today()->addDays($settings->payment_terms->getDays())->toDateString();
                                     })
@@ -171,7 +186,7 @@ class InvoiceResource extends Resource
                                         }
                                     }),
                                 Forms\Components\Select::make('discount_method')
-                                    ->label('Discount method')
+                                    ->label(translate('Discount method'))
                                     ->options(DocumentDiscountMethod::class)
                                     ->softRequired()
                                     ->default($settings->discount_method)
@@ -194,7 +209,7 @@ class InvoiceResource extends Resource
                             ->orderColumn('line_number')
                             ->reorderAtStart()
                             ->cloneable()
-                            ->addActionLabel('Add an item')
+                            ->addActionLabel(translate('Add an item'))
                             ->headers(function (Forms\Get $get) use ($settings) {
                                 $hasDiscounts = DocumentDiscountMethod::parse($get('discount_method'))->isPerLineItem();
 
@@ -222,9 +237,9 @@ class InvoiceResource extends Resource
                             ->schema([
                                 Forms\Components\Group::make([
                                     CreateOfferingSelect::make('offering_id')
-                                        ->label('Item')
+                                        ->label(translate('Item'))
                                         ->hiddenLabel()
-                                        ->placeholder('Select item')
+                                        ->placeholder(translate('Select item'))
                                         ->required()
                                         ->live()
                                         ->inlineSuffix()
@@ -279,7 +294,7 @@ class InvoiceResource extends Resource
                                             }
                                         }),
                                     Forms\Components\TextInput::make('description')
-                                        ->placeholder('Enter item description')
+                                        ->placeholder(translate('Enter item description'))
                                         ->hiddenLabel(),
                                 ])->columnSpan(1),
                                 Forms\Components\TextInput::make('quantity')
@@ -295,9 +310,9 @@ class InvoiceResource extends Resource
                                     ->default(0),
                                 Forms\Components\Group::make([
                                     CreateAdjustmentSelect::make('salesTaxes')
-                                        ->label('Taxes')
+                                        ->label(translate('Taxes'))
                                         ->hiddenLabel()
-                                        ->placeholder('Select taxes')
+                                        ->placeholder(translate('Select taxes'))
                                         ->category(AdjustmentCategory::Tax)
                                         ->type(AdjustmentType::Sales)
                                         ->adjustmentsRelationship('salesTaxes')
@@ -309,9 +324,9 @@ class InvoiceResource extends Resource
                                         ->live()
                                         ->searchable(),
                                     CreateAdjustmentSelect::make('salesDiscounts')
-                                        ->label('Discounts')
+                                        ->label(translate('Discounts'))
                                         ->hiddenLabel()
-                                        ->placeholder('Select discounts')
+                                        ->placeholder(translate('Select discounts'))
                                         ->category(AdjustmentCategory::Discount)
                                         ->type(AdjustmentType::Sales)
                                         ->adjustmentsRelationship('salesDiscounts')
@@ -375,7 +390,7 @@ class InvoiceResource extends Resource
                             ->default($settings->terms)
                             ->columnSpanFull(),
                     ]),
-                DocumentFooterSection::make('Invoice Footer')
+                DocumentFooterSection::make(translate('Invoice Footer'))
                     ->defaultFooter($settings->footer),
             ]);
     }
@@ -401,7 +416,7 @@ class InvoiceResource extends Resource
                     ->badge()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('due_date')
-                    ->label('Due')
+                    ->label(translate('Due'))
                     ->asRelativeDay()
                     ->sortable()
                     ->hideOnTabs(['draft']),
@@ -409,7 +424,7 @@ class InvoiceResource extends Resource
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('invoice_number')
-                    ->label('Number')
+                    ->label(translate('Number'))
                     ->searchable()
                     ->description(function (Invoice $record) {
                         return $record->source_type?->getLabel();
@@ -425,13 +440,13 @@ class InvoiceResource extends Resource
                     ->toggleable()
                     ->alignEnd(),
                 Tables\Columns\TextColumn::make('amount_paid')
-                    ->label('Amount paid')
+                    ->label(translate('Amount paid'))
                     ->currencyWithConversion(static fn (Invoice $record) => $record->currency_code)
                     ->sortable()
                     ->alignEnd()
                     ->showOnTabs(['unpaid']),
                 Tables\Columns\TextColumn::make('amount_due')
-                    ->label('Amount due')
+                    ->label(translate('Amount due'))
                     ->currencyWithConversion(static fn (Invoice $record) => $record->currency_code)
                     ->sortable()
                     ->alignEnd()
@@ -447,13 +462,13 @@ class InvoiceResource extends Resource
                     ->options(InvoiceStatus::class)
                     ->multiple(),
                 Tables\Filters\TernaryFilter::make('has_payments')
-                    ->label('Has payments')
+                    ->label(translate('Has payments'))
                     ->queries(
                         true: fn (Builder $query) => $query->whereHas('payments'),
                         false: fn (Builder $query) => $query->whereDoesntHave('payments'),
                     ),
                 Tables\Filters\SelectFilter::make('source_type')
-                    ->label('Source type')
+                    ->label(translate('Source type'))
                     ->options([
                         DocumentType::Estimate->value => DocumentType::Estimate->getLabel(),
                         DocumentType::RecurringInvoice->value => DocumentType::RecurringInvoice->getLabel(),
@@ -469,13 +484,13 @@ class InvoiceResource extends Resource
                         };
                     }),
                 DateRangeFilter::make('date')
-                    ->fromLabel('From date')
-                    ->untilLabel('To date')
-                    ->indicatorLabel('Date'),
+                    ->fromLabel(translate('From date'))
+                    ->untilLabel(translate('To date'))
+                    ->indicatorLabel(translate('Date')),
                 DateRangeFilter::make('due_date')
-                    ->fromLabel('From due date')
-                    ->untilLabel('To due date')
-                    ->indicatorLabel('Due'),
+                    ->fromLabel(translate('From due date'))
+                    ->untilLabel(translate('To due date'))
+                    ->indicatorLabel(translate('Due')),
             ])
             ->headerActions([
                 Tables\Actions\ExportAction::make()
@@ -492,7 +507,7 @@ class InvoiceResource extends Resource
                         Invoice::getApproveDraftAction(Tables\Actions\Action::class),
                         Invoice::getMarkAsSentAction(Tables\Actions\Action::class),
                         Tables\Actions\Action::make('recordPayment')
-                            ->label('Record Payment')
+                            ->label(translate('Record Payment'))
                             ->icon('heroicon-m-credit-card')
                             ->visible(function (Invoice $record) {
                                 return $record->canRecordPayment();
@@ -513,11 +528,11 @@ class InvoiceResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     ReplicateBulkAction::make()
-                        ->label('Replicate')
+                        ->label(translate('Replicate'))
                         ->modalWidth(MaxWidth::Large)
-                        ->modalDescription('Replicating invoices will also replicate their line items. Are you sure you want to proceed?')
-                        ->successNotificationTitle('Invoices replicated successfully')
-                        ->failureNotificationTitle('Failed to replicate invoices')
+                        ->modalDescription(translate('Replicating invoices will also replicate their line items. Are you sure you want to proceed?'))
+                        ->successNotificationTitle(translate('Invoices replicated successfully'))
+                        ->failureNotificationTitle(translate('Failed to replicate invoices'))
                         ->databaseTransaction()
                         ->excludeAttributes([
                             'status',
@@ -551,18 +566,18 @@ class InvoiceResource extends Resource
                             'updated_at',
                         ]),
                     Tables\Actions\BulkAction::make('approveDrafts')
-                        ->label('Approve')
+                        ->label(translate('Approve'))
                         ->icon('heroicon-o-check-circle')
                         ->databaseTransaction()
-                        ->successNotificationTitle('Invoices approved')
-                        ->failureNotificationTitle('Failed to Approve Invoices')
+                        ->successNotificationTitle(translate('Invoices approved'))
+                        ->failureNotificationTitle(translate('Failed to Approve Invoices'))
                         ->before(function (Collection $records, Tables\Actions\BulkAction $action) {
                             $isInvalid = $records->contains(fn (Invoice $record) => ! $record->canBeApproved());
 
                             if ($isInvalid) {
                                 Notification::make()
-                                    ->title('Approval failed')
-                                    ->body('Only draft invoices can be approved. Please adjust your selection and try again.')
+                                    ->title(translate('Approval failed'))
+                                    ->body(translate('Only draft invoices can be approved. Please adjust your selection and try again.'))
                                     ->persistent()
                                     ->danger()
                                     ->send();
@@ -578,18 +593,18 @@ class InvoiceResource extends Resource
                             $action->success();
                         }),
                     Tables\Actions\BulkAction::make('markAsSent')
-                        ->label('Mark as sent')
+                        ->label(translate('Mark as sent'))
                         ->icon('heroicon-o-paper-airplane')
                         ->databaseTransaction()
-                        ->successNotificationTitle('Invoices sent')
-                        ->failureNotificationTitle('Failed to Mark Invoices as Sent')
+                        ->successNotificationTitle(translate('Invoices sent'))
+                        ->failureNotificationTitle(translate('Failed to Mark Invoices as Sent'))
                         ->before(function (Collection $records, Tables\Actions\BulkAction $action) {
                             $isInvalid = $records->contains(fn (Invoice $record) => ! $record->canBeMarkedAsSent());
 
                             if ($isInvalid) {
                                 Notification::make()
-                                    ->title('Sending failed')
-                                    ->body('Only unsent invoices can be marked as sent. Please adjust your selection and try again.')
+                                    ->title(translate('Sending failed'))
+                                    ->body(translate('Only unsent invoices can be marked as sent. Please adjust your selection and try again.'))
                                     ->persistent()
                                     ->danger()
                                     ->send();

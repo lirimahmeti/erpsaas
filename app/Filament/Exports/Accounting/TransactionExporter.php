@@ -20,25 +20,25 @@ class TransactionExporter extends Exporter
             ExportColumn::make('amount')
                 ->money(),
             ExportColumn::make('account.name')
-                ->label('Category'),
+                ->label(translate('Category')),
             ExportColumn::make('bankAccount.account.name')
-                ->label('Account'),
+                ->label(translate('Account')),
             ExportColumn::make('type')
                 ->enum(),
             ExportColumn::make('payeeable.name')
-                ->label('Payee'),
+                ->label(translate('Payee')),
             ExportColumn::make('payment_method')
                 ->enum(),
             ExportColumn::make('notes')
                 ->enabledByDefault(false),
             ExportColumn::make('transactionable_type')
-                ->label('Source type')
+                ->label(translate('Source type'))
                 ->formatStateUsing(static function ($state) {
                     return class_basename($state);
                 })
                 ->enabledByDefault(false),
             ExportColumn::make('payeeable_type')
-                ->label('Payee type')
+                ->label(translate('Payee type'))
                 ->formatStateUsing(static function ($state) {
                     return class_basename($state);
                 })

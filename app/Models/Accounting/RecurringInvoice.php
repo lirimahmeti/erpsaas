@@ -241,16 +241,26 @@ class RecurringInvoice extends Document
             : $this->interval_type->getSingularLabel();
 
         $dayDescription = match (true) {
-            $this->interval_type->isWeek() && $this->day_of_week => " on {$this->day_of_week->getLabel()}",
+            $this->interval_type->isWeek() && $this->day_of_week => translate(' on :day', [
+                'day' => $this->day_of_week->getLabel(),
+            ]),
 
-            $this->interval_type->isMonth() && $this->day_of_month => " on the {$this->day_of_month->getLabel()} day",
+            $this->interval_type->isMonth() && $this->day_of_month => translate(' on the :day day', [
+                'day' => $this->day_of_month->getLabel(),
+            ]),
 
-            $this->interval_type->isYear() && $this->month && $this->day_of_month => " on {$this->month->getLabel()} {$this->day_of_month->getLabel()}",
+            $this->interval_type->isYear() && $this->month && $this->day_of_month => translate(' on :month :day', [
+                'month' => $this->month->getLabel(),
+                'day' => $this->day_of_month->getLabel(),
+            ]),
 
             default => ''
         };
 
-        return "Repeat every {$interval}{$dayDescription}";
+        return translate('Repeat every :interval:dayDescription', [
+            'interval' => $interval,
+            'dayDescription' => $dayDescription,
+        ]);
     }
 
     public function getEndDescription(): ?string
@@ -260,11 +270,16 @@ class RecurringInvoice extends Document
         }
 
         return match (true) {
-            $this->end_type->isNever() => 'Never',
+            $this->end_type->isNever() => translate('Never'),
 
-            $this->end_type->isAfter() && $this->max_occurrences => "After {$this->max_occurrences} " . str($this->max_occurrences === 1 ? 'invoice' : 'invoices'),
+            $this->end_type->isAfter() && $this->max_occurrences => translate('After :count :record', [
+                'count' => $this->max_occurrences,
+                'record' => translate($this->max_occurrences === 1 ? 'invoice' : 'invoices'),
+            ]),
 
-            $this->end_type->isOn() && $this->end_date => 'On ' . $this->end_date->toDefaultDateFormat(),
+            $this->end_type->isOn() && $this->end_date => translate('On :date', [
+                'date' => $this->end_date->toDefaultDateFormat(),
+            ]),
 
             default => null,
         };
@@ -396,7 +411,7 @@ class RecurringInvoice extends Document
             ->label(fn (self $record) => $record->hasSchedule() ? 'Edit schedule' : 'Set schedule')
             ->icon('heroicon-m-calendar-date-range')
             ->slideOver()
-            ->successNotificationTitle('Schedule saved')
+            ->successNotificationTitle(translate('Schedule saved'))
             ->mountUsing(function (self $record, Form $form) {
                 $data = $record->attributesToArray();
 
@@ -406,7 +421,7 @@ class RecurringInvoice extends Document
                 $form->fill($data);
             })
             ->form([
-                CustomSection::make('Frequency')
+                CustomSection::make(translate('Frequency'))
                     ->contained(false)
                     ->schema(function (Forms\Get $get) {
                         $frequency = Frequency::parse($get('frequency'));
@@ -416,7 +431,7 @@ class RecurringInvoice extends Document
 
                         return [
                             Forms\Components\Select::make('frequency')
-                                ->label('Repeats')
+                                ->label(translate('Repeats'))
                                 ->options(Frequency::class)
                                 ->softRequired()
                                 ->live()
@@ -441,13 +456,13 @@ class RecurringInvoice extends Document
                                     }),
                             ])
                                 ->live()
-                                ->label('Every')
+                                ->label(translate('Every'))
                                 ->required()
                                 ->markAsRequired(false)
                                 ->visible($frequency->isCustom()),
 
                             Forms\Components\Select::make('month')
-                                ->label('Month')
+                                ->label(translate('Month'))
                                 ->options(Month::class)
                                 ->softRequired()
                                 ->visible($frequency->isYearly() || $intervalType?->isYear())
@@ -458,7 +473,7 @@ class RecurringInvoice extends Document
                                 }),
 
                             Forms\Components\Select::make('day_of_month')
-                                ->label('Day of Month')
+                                ->label(translate('Day of Month'))
                                 ->options(function () use ($month) {
                                     if (! $month) {
                                         return DayOfMonth::class;
@@ -481,13 +496,15 @@ class RecurringInvoice extends Document
                             Banner::make('dayOfMonthNotice')
                                 ->info()
                                 ->title(static function () use ($dayOfMonth) {
-                                    return "For months with fewer than {$dayOfMonth->value} days, the last day of the month will be used.";
+                                    return translate('For months with fewer than :day days, the last day of the month will be used.', [
+                                        'day' => $dayOfMonth->value,
+                                    ]);
                                 })
                                 ->columnSpanFull()
                                 ->visible($dayOfMonth?->mayExceedMonthLength() && ($frequency->isMonthly() || $intervalType?->isMonth())),
 
                             Forms\Components\Select::make('day_of_week')
-                                ->label('Day of Week')
+                                ->label(translate('Day of Week'))
                                 ->options(DayOfWeek::class)
                                 ->softRequired()
                                 ->visible(($frequency->isWeekly() || $intervalType?->isWeek()) ?? false)
@@ -499,11 +516,11 @@ class RecurringInvoice extends Document
                         ];
                     })->columns(2),
 
-                CustomSection::make('Dates & Time')
+                CustomSection::make(translate('Dates & Time'))
                     ->contained(false)
                     ->schema([
                         Forms\Components\DatePicker::make('start_date')
-                            ->label('First invoice date')
+                            ->label(translate('First invoice date'))
                             ->softRequired()
                             ->live()
                             ->minDate(company_today())
@@ -517,7 +534,7 @@ class RecurringInvoice extends Document
                             $components = [];
 
                             $components[] = Forms\Components\Select::make('end_type')
-                                ->label('End schedule')
+                                ->label(translate('End schedule'))
                                 ->options(EndType::class)
                                 ->softRequired()
                                 ->live()
@@ -544,7 +561,7 @@ class RecurringInvoice extends Document
 
                             return [
                                 Cluster::make($components)
-                                    ->label('Schedule ends')
+                                    ->label(translate('Schedule ends'))
                                     ->required()
                                     ->markAsRequired(false),
                             ];
@@ -567,14 +584,14 @@ class RecurringInvoice extends Document
     public static function getApproveDraftAction(string $action = Action::class): MountableAction
     {
         return $action::make('approveDraft')
-            ->label('Approve')
+            ->label(translate('Approve'))
             ->icon('heroicon-m-check-circle')
             ->visible(function (self $record) {
                 return $record->canBeApproved();
             })
             ->requiresConfirmation()
             ->databaseTransaction()
-            ->successNotificationTitle('Recurring invoice approved')
+            ->successNotificationTitle(translate('Recurring invoice approved'))
             ->action(function (self $record, MountableAction $action, Component $livewire) {
                 if ($record->hasInactiveAdjustments()) {
                     $isViewPage = $livewire instanceof ViewRecurringInvoice;
@@ -584,8 +601,8 @@ class RecurringInvoice extends Document
                     } else {
                         Notification::make()
                             ->warning()
-                            ->title('Cannot approve recurring invoice')
-                            ->body('This recurring invoice has inactive adjustments that must be addressed first.')
+                            ->title(translate('Cannot approve recurring invoice'))
+                            ->body(translate('This recurring invoice has inactive adjustments that must be addressed first.'))
                             ->persistent()
                             ->send();
                     }

@@ -270,14 +270,14 @@ class Estimate extends Document
     public static function getApproveDraftAction(string $action = Action::class): MountableAction
     {
         return $action::make('approveDraft')
-            ->label('Approve')
+            ->label(translate('Approve'))
             ->icon('heroicon-m-check-circle')
             ->visible(function (self $record) {
                 return $record->canBeApproved();
             })
             ->requiresConfirmation()
             ->databaseTransaction()
-            ->successNotificationTitle('Estimate approved')
+            ->successNotificationTitle(translate('Estimate approved'))
             ->action(function (self $record, MountableAction $action, Component $livewire) {
                 if ($record->hasInactiveAdjustments()) {
                     $isViewPage = $livewire instanceof EstimateResource\Pages\ViewEstimate;
@@ -287,8 +287,8 @@ class Estimate extends Document
                     } else {
                         Notification::make()
                             ->warning()
-                            ->title('Cannot approve estimate')
-                            ->body('This estimate has inactive adjustments that must be addressed first.')
+                            ->title(translate('Cannot approve estimate'))
+                            ->body(translate('This estimate has inactive adjustments that must be addressed first.'))
                             ->persistent()
                             ->send();
                     }
@@ -303,12 +303,12 @@ class Estimate extends Document
     public static function getMarkAsSentAction(string $action = Action::class): MountableAction
     {
         return $action::make('markAsSent')
-            ->label('Mark as sent')
+            ->label(translate('Mark as sent'))
             ->icon('heroicon-m-paper-airplane')
             ->visible(static function (self $record) {
                 return $record->canBeMarkedAsSent();
             })
-            ->successNotificationTitle('Estimate sent')
+            ->successNotificationTitle(translate('Estimate sent'))
             ->action(function (self $record, MountableAction $action) {
                 $record->markAsSent();
 
@@ -374,13 +374,13 @@ class Estimate extends Document
     public static function getMarkAsAcceptedAction(string $action = Action::class): MountableAction
     {
         return $action::make('markAsAccepted')
-            ->label('Mark as Accepted')
+            ->label(translate('Mark as Accepted'))
             ->icon('heroicon-m-check-badge')
             ->visible(static function (self $record) {
                 return $record->canBeMarkedAsAccepted();
             })
             ->databaseTransaction()
-            ->successNotificationTitle('Estimate accepted')
+            ->successNotificationTitle(translate('Estimate accepted'))
             ->action(function (self $record, MountableAction $action) {
                 $record->markAsAccepted();
 
@@ -401,7 +401,7 @@ class Estimate extends Document
     public static function getMarkAsDeclinedAction(string $action = Action::class): MountableAction
     {
         return $action::make('markAsDeclined')
-            ->label('Mark as Declined')
+            ->label(translate('Mark as Declined'))
             ->icon('heroicon-m-x-circle')
             ->visible(static function (self $record) {
                 return $record->canBeMarkedAsDeclined();
@@ -409,7 +409,7 @@ class Estimate extends Document
             ->color('danger')
             ->requiresConfirmation()
             ->databaseTransaction()
-            ->successNotificationTitle('Estimate declined')
+            ->successNotificationTitle(translate('Estimate declined'))
             ->action(function (self $record, MountableAction $action) {
                 $record->markAsDeclined();
 
@@ -430,13 +430,13 @@ class Estimate extends Document
     public static function getConvertToInvoiceAction(string $action = Action::class): MountableAction
     {
         return $action::make('convertToInvoice')
-            ->label('Convert to Invoice')
+            ->label(translate('Convert to Invoice'))
             ->icon('heroicon-m-arrow-right-on-rectangle')
             ->visible(static function (self $record) {
                 return $record->canBeConverted();
             })
             ->databaseTransaction()
-            ->successNotificationTitle('Estimate converted to invoice')
+            ->successNotificationTitle(translate('Estimate converted to invoice'))
             ->action(function (self $record, MountableAction $action) {
                 $record->convertToInvoice();
 

@@ -24,7 +24,7 @@ class ViewBill extends ViewRecord
     {
         return [
             Actions\EditAction::make()
-                ->label('Edit bill')
+                ->label(translate('Edit bill'))
                 ->outlined(),
             Actions\ActionGroup::make([
                 Actions\ActionGroup::make([
@@ -32,7 +32,7 @@ class ViewBill extends ViewRecord
                 ])->dropdown(false),
                 Actions\DeleteAction::make(),
             ])
-                ->label('Actions')
+                ->label(translate('Actions'))
                 ->button()
                 ->outlined()
                 ->dropdownPlacement('bottom-end')
@@ -45,31 +45,31 @@ class ViewBill extends ViewRecord
     {
         return $infolist
             ->schema([
-                Section::make('Bill Details')
+                Section::make(translate('Bill Details'))
                     ->columns(4)
                     ->schema([
                         TextEntry::make('bill_number')
-                            ->label('Invoice #'),
+                            ->label(translate('Invoice #')),
                         TextEntry::make('status')
                             ->badge(),
                         TextEntry::make('vendor.name')
-                            ->label('Vendor')
+                            ->label(translate('Vendor'))
                             ->url(static fn (Bill $record) => $record->vendor_id ? VendorResource::getUrl('view', ['record' => $record->vendor_id]) : null)
                             ->link(),
                         TextEntry::make('total')
-                            ->label('Total')
+                            ->label(translate('Total'))
                             ->currency(static fn (Bill $record) => $record->currency_code),
                         TextEntry::make('amount_due')
-                            ->label('Amount due')
+                            ->label(translate('Amount due'))
                             ->currency(static fn (Bill $record) => $record->currency_code),
                         TextEntry::make('date')
-                            ->label('Date')
+                            ->label(translate('Date'))
                             ->date(),
                         TextEntry::make('due_date')
-                            ->label('Due')
+                            ->label(translate('Due'))
                             ->asRelativeDay(),
                         TextEntry::make('paid_at')
-                            ->label('Paid at')
+                            ->label(translate('Paid at'))
                             ->date(),
                     ]),
             ]);

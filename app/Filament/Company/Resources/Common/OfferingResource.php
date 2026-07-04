@@ -28,12 +28,27 @@ class OfferingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-square-3-stack-3d';
 
+    public static function getModelLabel(): string
+    {
+        return translate('offering');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return translate('offerings');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return translate('Offerings');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Banner::make('inactiveAdjustments')
-                    ->label('Inactive adjustments')
+                    ->label(translate('Inactive adjustments'))
                     ->warning()
                     ->icon('heroicon-o-exclamation-triangle')
                     ->visible(fn (?Offering $record) => $record?->hasInactiveAdjustments())
@@ -65,7 +80,7 @@ class OfferingResource extends Resource
 
     public static function getGeneralSection(bool $hasAttributeChoices = true): Forms\Components\Section
     {
-        return Forms\Components\Section::make('General')
+        return Forms\Components\Section::make(translate('General'))
             ->schema([
                 RadioDeck::make('type')
                     ->options(OfferingType::class)
@@ -83,7 +98,7 @@ class OfferingResource extends Resource
                     ->required()
                     ->money(),
                 Forms\Components\Textarea::make('description')
-                    ->label('Description')
+                    ->label(translate('Description'))
                     ->columnSpan(2)
                     ->rows(3),
                 Forms\Components\CheckboxList::make('attributes')
@@ -104,10 +119,10 @@ class OfferingResource extends Resource
 
     public static function getSellableSection(): Forms\Components\Section
     {
-        return Forms\Components\Section::make('Sale Information')
+        return Forms\Components\Section::make(translate('Sale Information'))
             ->schema([
                 CreateAccountSelect::make('income_account_id')
-                    ->label('Income account')
+                    ->label(translate('Income account'))
                     ->category(AccountCategory::Revenue)
                     ->type(AccountType::OperatingRevenue)
                     ->required()
@@ -115,12 +130,12 @@ class OfferingResource extends Resource
                         'required' => 'The income account is required for sellable offerings.',
                     ]),
                 CreateAdjustmentSelect::make('salesTaxes')
-                    ->label('Sales tax')
+                    ->label(translate('Sales tax'))
                     ->category(AdjustmentCategory::Tax)
                     ->type(AdjustmentType::Sales)
                     ->multiple(),
                 CreateAdjustmentSelect::make('salesDiscounts')
-                    ->label('Sales discount')
+                    ->label(translate('Sales discount'))
                     ->category(AdjustmentCategory::Discount)
                     ->type(AdjustmentType::Sales)
                     ->multiple(),
@@ -131,10 +146,10 @@ class OfferingResource extends Resource
 
     public static function getPurchasableSection(): Forms\Components\Section
     {
-        return Forms\Components\Section::make('Purchase Information')
+        return Forms\Components\Section::make(translate('Purchase Information'))
             ->schema([
                 CreateAccountSelect::make('expense_account_id')
-                    ->label('Expense account')
+                    ->label(translate('Expense account'))
                     ->category(AccountCategory::Expense)
                     ->type(AccountType::OperatingExpense)
                     ->required()
@@ -142,12 +157,12 @@ class OfferingResource extends Resource
                         'required' => 'The expense account is required for purchasable offerings.',
                     ]),
                 CreateAdjustmentSelect::make('purchaseTaxes')
-                    ->label('Purchase tax')
+                    ->label(translate('Purchase tax'))
                     ->category(AdjustmentCategory::Tax)
                     ->type(AdjustmentType::Purchase)
                     ->multiple(),
                 CreateAdjustmentSelect::make('purchaseDiscounts')
-                    ->label('Purchase discount')
+                    ->label(translate('Purchase discount'))
                     ->category(AdjustmentCategory::Discount)
                     ->type(AdjustmentType::Purchase)
                     ->multiple(),
@@ -170,9 +185,9 @@ class OfferingResource extends Resource
             })
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Name'),
+                    ->label(translate('Name')),
                 Tables\Columns\TextColumn::make('attributes')
-                    ->label('Attributes')
+                    ->label(translate('Attributes'))
                     ->badge(),
                 Tables\Columns\TextColumn::make('type')
                     ->searchable(),

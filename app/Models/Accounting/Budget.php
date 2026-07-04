@@ -225,13 +225,13 @@ class Budget extends Model
     public static function getApproveDraftAction(string $action = Action::class): MountableAction
     {
         return $action::make('approveDraft')
-            ->label('Approve')
+            ->label(translate('Approve'))
             ->icon('heroicon-m-check-circle')
             ->visible(function (self $record) {
                 return $record->canBeApproved();
             })
             ->databaseTransaction()
-            ->successNotificationTitle('Budget approved')
+            ->successNotificationTitle(translate('Budget approved'))
             ->action(function (self $record, MountableAction $action) {
                 $record->approveDraft();
                 $action->success();
@@ -244,7 +244,7 @@ class Budget extends Model
     public static function getCloseAction(string $action = Action::class): MountableAction
     {
         return $action::make('close')
-            ->label('Close')
+            ->label(translate('Close'))
             ->icon('heroicon-m-lock-closed')
             ->color('warning')
             ->visible(function (self $record) {
@@ -252,7 +252,7 @@ class Budget extends Model
             })
             ->requiresConfirmation()
             ->databaseTransaction()
-            ->successNotificationTitle('Budget closed')
+            ->successNotificationTitle(translate('Budget closed'))
             ->action(function (self $record, MountableAction $action) {
                 $record->close();
                 $action->success();
@@ -265,14 +265,14 @@ class Budget extends Model
     public static function getReopenAction(string $action = Action::class): MountableAction
     {
         return $action::make('reopen')
-            ->label('Reopen')
+            ->label(translate('Reopen'))
             ->icon('heroicon-m-lock-open')
             ->visible(function (self $record) {
                 return $record->isClosed();
             })
             ->requiresConfirmation()
             ->databaseTransaction()
-            ->successNotificationTitle('Budget reopened')
+            ->successNotificationTitle(translate('Budget reopened'))
             ->action(function (self $record, MountableAction $action) {
                 $record->reopen();
                 $action->success();

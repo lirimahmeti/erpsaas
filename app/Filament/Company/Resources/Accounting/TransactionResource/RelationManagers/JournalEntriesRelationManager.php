@@ -28,20 +28,20 @@ class JournalEntriesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('type')
-                    ->label('Type'),
+                    ->label(translate('Type')),
                 Tables\Columns\TextColumn::make('account.name')
-                    ->label('Account')
+                    ->label(translate('Account'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('account.category')
-                    ->label('Category')
+                    ->label(translate('Category'))
                     ->badge(),
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Description')
+                    ->label(translate('Description'))
                     ->searchable()
                     ->limit(50),
                 Tables\Columns\TextColumn::make('amount')
-                    ->label('Amount')
+                    ->label(translate('Amount'))
                     ->weight(FontWeight::SemiBold)
                     ->sortable()
                     ->currency(CurrencyAccessor::getDefaultCurrency()),

@@ -47,7 +47,7 @@ abstract class Document extends Model
     public static function getPrintDocumentAction(string $action = Action::class): MountableAction
     {
         return $action::make('printPdf')
-            ->label('Print')
+            ->label(translate('Print'))
             ->icon('heroicon-m-printer')
             ->action(function (self $record, Component $livewire) {
                 $url = route('documents.print', [

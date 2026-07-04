@@ -9,7 +9,7 @@ class AccountBalanceReportTransformer extends BaseReportTransformer
 {
     public function getTitle(): string
     {
-        return 'Account Balances';
+        return translate('Account Balances');
     }
 
     /**

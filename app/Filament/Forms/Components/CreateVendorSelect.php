@@ -41,9 +41,9 @@ class CreateVendorSelect extends Select
     protected function createVendorAction(Action $action): Action
     {
         return $action
-            ->label('Create vendor')
+            ->label(translate('Create vendor'))
             ->slideOver()
             ->modalWidth(MaxWidth::ThreeExtraLarge)
-            ->modalHeading('Create a new vendor');
+            ->modalHeading(translate('Create a new vendor'));
     }
 }

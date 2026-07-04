@@ -44,10 +44,10 @@ class InvoiceExporter extends Exporter
             ExportColumn::make('last_sent_at')
                 ->dateTime(),
             ExportColumn::make('estimate.estimate_number')
-                ->label('Estimate number')
+                ->label(translate('Estimate number'))
                 ->enabledByDefault(false),
             ExportColumn::make('recurringInvoice.order_number')
-                ->label('Recurring invoice number')
+                ->label(translate('Recurring invoice number'))
                 ->enabledByDefault(false),
             ExportColumn::make('discount_method')
                 ->enabledByDefault(false)

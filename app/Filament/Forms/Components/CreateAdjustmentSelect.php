@@ -143,15 +143,15 @@ class CreateAdjustmentSelect extends Select
     {
         return [
             TextInput::make('name')
-                ->label('Name')
+                ->label(translate('Name'))
                 ->required()
                 ->maxLength(255),
 
             Textarea::make('description')
-                ->label('Description'),
+                ->label(translate('Description')),
 
             Select::make('category')
-                ->label('Category')
+                ->label(translate('Category'))
                 ->options(AdjustmentCategory::class)
                 ->default(AdjustmentCategory::Tax)
                 ->hidden(fn () => (bool) $this->getCategory())
@@ -159,7 +159,7 @@ class CreateAdjustmentSelect extends Select
                 ->required(),
 
             Select::make('type')
-                ->label('Type')
+                ->label(translate('Type'))
                 ->options(AdjustmentType::class)
                 ->default(AdjustmentType::Sales)
                 ->hidden(fn () => (bool) $this->getType())
@@ -167,25 +167,25 @@ class CreateAdjustmentSelect extends Select
                 ->required(),
 
             Select::make('computation')
-                ->label('Computation')
+                ->label(translate('Computation'))
                 ->options(AdjustmentComputation::class)
                 ->default(AdjustmentComputation::Percentage)
                 ->live()
                 ->required(),
 
             TextInput::make('rate')
-                ->label('Rate')
+                ->label(translate('Rate'))
                 ->rate(static fn (Get $get) => $get('computation'))
                 ->required(),
 
             Select::make('scope')
-                ->label('Scope')
+                ->label(translate('Scope'))
                 ->options(AdjustmentScope::class),
 
             Checkbox::make('recoverable')
-                ->label('Recoverable')
+                ->label(translate('Recoverable'))
                 ->default(false)
-                ->helperText('When enabled, tax is tracked separately as claimable from the government. Non-recoverable taxes are treated as part of the expense.')
+                ->helperText(translate('When enabled, tax is tracked separately as claimable from the government. Non-recoverable taxes are treated as part of the expense.'))
                 ->visible(function (Get $get) {
                     $category = $this->getCategory() ?? AdjustmentCategory::parse($get('category'));
                     $type = $this->getType() ?? AdjustmentType::parse($get('type'));

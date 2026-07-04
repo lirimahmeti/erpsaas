@@ -29,7 +29,7 @@ class ViewRecurringInvoice extends ViewRecord
     {
         return [
             Actions\EditAction::make()
-                ->label('Edit recurring invoice')
+                ->label(translate('Edit recurring invoice'))
                 ->outlined(),
             Actions\ActionGroup::make([
                 Actions\ActionGroup::make([
@@ -39,7 +39,7 @@ class ViewRecurringInvoice extends ViewRecord
                 ])->dropdown(false),
                 Actions\DeleteAction::make(),
             ])
-                ->label('Actions')
+                ->label(translate('Actions'))
                 ->button()
                 ->outlined()
                 ->dropdownPlacement('bottom-end')
@@ -53,7 +53,7 @@ class ViewRecurringInvoice extends ViewRecord
         return $infolist
             ->schema([
                 BannerEntry::make('inactiveAdjustments')
-                    ->label('Inactive adjustments')
+                    ->label(translate('Inactive adjustments'))
                     ->warning()
                     ->icon('heroicon-o-exclamation-triangle')
                     ->visible(fn (RecurringInvoice $record) => $record->hasInactiveAdjustments() && $record->canBeApproved())
@@ -79,8 +79,8 @@ class ViewRecurringInvoice extends ViewRecord
                     }),
                 BannerEntry::make('scheduleIsNotSet')
                     ->info()
-                    ->title('Schedule not set')
-                    ->description('The schedule for this recurring invoice has not been set. You must set a schedule before you can approve this draft and start creating invoices.')
+                    ->title(translate('Schedule not set'))
+                    ->description(translate('The schedule for this recurring invoice has not been set. You must set a schedule before you can approve this draft and start creating invoices.'))
                     ->visible(fn (RecurringInvoice $record) => ! $record->hasValidStartDate())
                     ->columnSpanFull()
                     ->actions([
@@ -89,15 +89,15 @@ class ViewRecurringInvoice extends ViewRecord
                     ]),
                 BannerEntry::make('readyToApprove')
                     ->info()
-                    ->title('Ready to approve')
-                    ->description('This recurring invoice is ready for approval. Review the details, and approve it when you’re ready to start generating invoices.')
+                    ->title(translate('Ready to approve'))
+                    ->description(translate('This recurring invoice is ready for approval. Review the details, and approve it when you’re ready to start generating invoices.'))
                     ->visible(fn (RecurringInvoice $record) => $record->canBeApproved() && ! $record->hasInactiveAdjustments())
                     ->columnSpanFull()
                     ->actions([
                         RecurringInvoice::getApproveDraftAction(Action::class)
                             ->outlined(),
                     ]),
-                Section::make('Invoice Details')
+                Section::make(translate('Invoice Details'))
                     ->columns(4)
                     ->schema([
                         Grid::make(1)
@@ -105,22 +105,22 @@ class ViewRecurringInvoice extends ViewRecord
                                 TextEntry::make('status')
                                     ->badge(),
                                 TextEntry::make('client.name')
-                                    ->label('Client')
+                                    ->label(translate('Client'))
                                     ->color('primary')
                                     ->weight(FontWeight::SemiBold)
                                     ->url(static fn (RecurringInvoice $record) => $record->client_id ? ClientResource::getUrl('view', ['record' => $record->client_id]) : null)
                                     ->link(),
                                 TextEntry::make('total')
-                                    ->label('Total')
+                                    ->label(translate('Total'))
                                     ->currency(static fn (RecurringInvoice $record) => $record->currency_code),
                                 TextEntry::make('last_date')
-                                    ->label('Last invoice')
+                                    ->label(translate('Last invoice'))
                                     ->date(),
                                 TextEntry::make('next_date')
-                                    ->label('Next invoice')
+                                    ->label(translate('Next invoice'))
                                     ->date(),
                                 TextEntry::make('schedule')
-                                    ->label('Schedule')
+                                    ->label(translate('Schedule'))
                                     ->getStateUsing(function (RecurringInvoice $record) {
                                         return $record->getScheduleDescription();
                                     })
@@ -128,7 +128,7 @@ class ViewRecurringInvoice extends ViewRecord
                                         return $record->getTimelineDescription();
                                     }),
                                 TextEntry::make('occurrences_count')
-                                    ->label('Created to date')
+                                    ->label(translate('Created to date'))
                                     ->visible(static fn (RecurringInvoice $record) => $record->occurrences_count > 0)
                                     ->color('primary')
                                     ->weight(FontWeight::SemiBold)
@@ -137,14 +137,14 @@ class ViewRecurringInvoice extends ViewRecord
                                         return ListInvoices::getUrl(['recurringInvoice' => $record->id]);
                                     }),
                                 TextEntry::make('end_date')
-                                    ->label('Ends on')
+                                    ->label(translate('Ends on'))
                                     ->date()
                                     ->visible(fn (RecurringInvoice $record) => $record->end_type?->isOn()),
                                 TextEntry::make('approved_at')
-                                    ->label('Approved at')
+                                    ->label(translate('Approved at'))
                                     ->date(),
                                 TextEntry::make('ended_at')
-                                    ->label('Ended at')
+                                    ->label(translate('Ended at'))
                                     ->date()
                                     ->visible(static fn (RecurringInvoice $record) => $record->ended_at),
                             ])->columnSpan(1),

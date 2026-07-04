@@ -14,7 +14,7 @@ class AccountTransactionReportTransformer extends BaseReportTransformer
 
     public function getTitle(): string
     {
-        return 'Account Transactions';
+        return translate('Account Transactions');
     }
 
     /**

@@ -15,7 +15,7 @@ class CashFlowStatementReportTransformer extends SummaryReportTransformer
 
     public function getTitle(): string
     {
-        return 'Cash Flow Statement';
+        return translate('Cash Flow Statement');
     }
 
     public function getCategories(): array

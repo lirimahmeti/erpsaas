@@ -223,14 +223,14 @@ abstract class BaseReportPage extends Page
         return [
             ActionGroup::make([
                 Action::make('exportCSV')
-                    ->label('CSV')
+                    ->label(translate('CSV'))
                     ->action(fn () => $this->exportCSV()),
                 Action::make('exportPDF')
-                    ->label('PDF')
+                    ->label(translate('PDF'))
                     ->hidden(is_demo_environment())
                     ->action(fn () => $this->exportPDF()),
             ])
-                ->label('Export')
+                ->label(translate('Export'))
                 ->button()
                 ->outlined()
                 ->dropdownWidth('max-w-[7rem]')
@@ -243,7 +243,7 @@ abstract class BaseReportPage extends Page
     protected function getDateRangeFormComponent(): DateRangeSelect
     {
         return DateRangeSelect::make('dateRange')
-            ->label('Date range')
+            ->label(translate('Date range'))
             ->selectablePlaceholder(false)
             ->startDateField('startDate')
             ->endDateField('endDate');
@@ -252,7 +252,7 @@ abstract class BaseReportPage extends Page
     protected function getStartDateFormComponent(): DatePicker
     {
         return DatePicker::make('startDate')
-            ->label('Start date')
+            ->label(translate('Start date'))
             ->live()
             ->afterStateUpdated(static function ($state, Set $set) {
                 $set('dateRange', 'Custom');
@@ -262,7 +262,7 @@ abstract class BaseReportPage extends Page
     protected function getEndDateFormComponent(): DatePicker
     {
         return DatePicker::make('endDate')
-            ->label('End date')
+            ->label(translate('End date'))
             ->live()
             ->afterStateUpdated(static function (Set $set) {
                 $set('dateRange', 'Custom');
@@ -272,7 +272,7 @@ abstract class BaseReportPage extends Page
     protected function getAsOfDateFormComponent(): DatePicker
     {
         return DatePicker::make('asOfDate')
-            ->label('As of date')
+            ->label(translate('As of date'))
             ->live()
             ->afterStateUpdated(static function (Set $set) {
                 $set('dateRange', 'Custom');

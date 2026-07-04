@@ -135,7 +135,7 @@ class CompanyPanelProvider extends PanelProvider
                     ])
                     ->groups([
                         NavigationGroup::make('Sales')
-                            ->label('Sales')
+                            ->label(translate('Sales'))
                             ->icon('heroicon-o-currency-dollar')
                             ->items([
                                 ...ClientResource::getNavigationItems(),
@@ -144,7 +144,7 @@ class CompanyPanelProvider extends PanelProvider
                                 ...RecurringInvoiceResource::getNavigationItems(),
                             ]),
                         NavigationGroup::make('Purchases')
-                            ->label('Purchases')
+                            ->label(translate('Purchases'))
                             ->icon('heroicon-o-shopping-cart')
                             ->items([
                                 ...BillResource::getNavigationItems(),
@@ -252,13 +252,13 @@ class CompanyPanelProvider extends PanelProvider
             'read',
             'update',
             'delete',
-        ])->description('Administrator users can perform any action.');
+        ])->description(translate('Administrator users can perform any action.'));
 
         FilamentCompanies::role('editor', 'Editor', [
             'read',
             'create',
             'update',
-        ])->description('Editor users have the ability to read, create, and update.');
+        ])->description(translate('Editor users have the ability to read, create, and update.'));
     }
 
     /**
@@ -292,7 +292,7 @@ class CompanyPanelProvider extends PanelProvider
                 ->filtersTriggerAction(
                     fn (Tables\Actions\Action $action) => $action
                         ->button()
-                        ->label('Filters')
+                        ->label(translate('Filters'))
                         ->slideOver()
                 );
         });

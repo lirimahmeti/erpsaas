@@ -37,15 +37,15 @@ abstract class BaseEntityBalanceSummaryReportPage extends BaseReportPage
                 ->label($this->getEntityType()->getLabel())
                 ->alignment(Alignment::Left),
             Column::make('total_balance')
-                ->label('Total')
+                ->label(translate('Total'))
                 ->toggleable()
                 ->alignment(Alignment::Right),
             Column::make('paid_balance')
-                ->label('Paid')
+                ->label(translate('Paid'))
                 ->toggleable()
                 ->alignment(Alignment::Right),
             Column::make('unpaid_balance')
-                ->label('Unpaid')
+                ->label(translate('Unpaid'))
                 ->toggleable()
                 ->alignment(Alignment::Right),
         ];

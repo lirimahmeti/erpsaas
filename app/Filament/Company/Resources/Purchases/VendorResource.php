@@ -25,21 +25,36 @@ class VendorResource extends Resource
 {
     protected static ?string $model = Vendor::class;
 
+    public static function getModelLabel(): string
+    {
+        return translate('vendor');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return translate('vendors');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return translate('Vendors');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('General Information')
+                Forms\Components\Section::make(translate('General Information'))
                     ->schema([
                         Forms\Components\Group::make()
                             ->columns(2)
                             ->schema([
                                 Forms\Components\TextInput::make('name')
-                                    ->label('Vendor name')
+                                    ->label(translate('Vendor name'))
                                     ->required()
                                     ->maxLength(255),
                                 Forms\Components\Radio::make('type')
-                                    ->label('Vendor type')
+                                    ->label(translate('Vendor type'))
                                     ->required()
                                     ->live()
                                     ->options(VendorType::class)
@@ -49,13 +64,13 @@ class VendorResource extends Resource
                                     ->softRequired()
                                     ->visible(static fn (Forms\Get $get) => VendorType::parse($get('type')) === VendorType::Regular),
                                 Forms\Components\Select::make('contractor_type')
-                                    ->label('Contractor type')
+                                    ->label(translate('Contractor type'))
                                     ->required()
                                     ->live()
                                     ->visible(static fn (Forms\Get $get) => VendorType::parse($get('type')) === VendorType::Contractor)
                                     ->options(ContractorType::class),
                                 Forms\Components\TextInput::make('ssn')
-                                    ->label('Social security number')
+                                    ->label(translate('Social security number'))
                                     ->required()
                                     ->live()
                                     ->mask('999-99-9999')
@@ -64,7 +79,7 @@ class VendorResource extends Resource
                                     ->visible(static fn (Forms\Get $get) => ContractorType::parse($get('contractor_type')) === ContractorType::Individual)
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('ein')
-                                    ->label('Employer identification number')
+                                    ->label(translate('Employer identification number'))
                                     ->required()
                                     ->live()
                                     ->mask('99-9999999')
@@ -79,7 +94,7 @@ class VendorResource extends Resource
                                 Forms\Components\Textarea::make('notes')
                                     ->columnSpanFull(),
                             ]),
-                        CustomSection::make('Primary Contact')
+                        CustomSection::make(translate('Primary Contact'))
                             ->relationship('contact')
                             ->saveRelationshipsUsing(null)
                             ->saveRelationshipsBeforeChildrenUsing(null)
@@ -89,13 +104,13 @@ class VendorResource extends Resource
                                 Forms\Components\Hidden::make('is_primary')
                                     ->default(true),
                                 Forms\Components\TextInput::make('first_name')
-                                    ->label('First name')
+                                    ->label(translate('First name'))
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('last_name')
-                                    ->label('Last name')
+                                    ->label(translate('Last name'))
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('email')
-                                    ->label('Email')
+                                    ->label(translate('Email'))
                                     ->email()
                                     ->columnSpanFull()
                                     ->maxLength(255),
@@ -110,25 +125,25 @@ class VendorResource extends Resource
                                         Forms\Components\Builder\Block::make('primary')
                                             ->schema([
                                                 Forms\Components\TextInput::make('number')
-                                                    ->label('Phone')
+                                                    ->label(translate('Phone'))
                                                     ->maxLength(15),
                                             ])->maxItems(1),
                                         Forms\Components\Builder\Block::make('mobile')
                                             ->schema([
                                                 Forms\Components\TextInput::make('number')
-                                                    ->label('Mobile')
+                                                    ->label(translate('Mobile'))
                                                     ->maxLength(15),
                                             ])->maxItems(1),
                                         Forms\Components\Builder\Block::make('toll_free')
                                             ->schema([
                                                 Forms\Components\TextInput::make('number')
-                                                    ->label('Toll free')
+                                                    ->label(translate('Toll free'))
                                                     ->maxLength(15),
                                             ])->maxItems(1),
                                         Forms\Components\Builder\Block::make('fax')
                                             ->schema([
                                                 Forms\Components\TextInput::make('number')
-                                                    ->label('Fax')
+                                                    ->label(translate('Fax'))
                                                     ->live()
                                                     ->maxLength(15),
                                             ])->maxItems(1),
@@ -136,10 +151,10 @@ class VendorResource extends Resource
                                     ->deletable(fn (PhoneBuilder $builder) => $builder->getItemsCount() > 1)
                                     ->reorderable(false)
                                     ->blockNumbers(false)
-                                    ->addActionLabel('Add Phone'),
+                                    ->addActionLabel(translate('Add Phone')),
                             ])->columns(),
                     ])->columns(1),
-                Forms\Components\Section::make('Address Information')
+                Forms\Components\Section::make(translate('Address Information'))
                     ->relationship('address')
                     ->saveRelationshipsUsing(null)
                     ->saveRelationshipsBeforeChildrenUsing(null)
@@ -167,18 +182,18 @@ class VendorResource extends Resource
                     ->sortable()
                     ->description(static fn (Vendor $vendor) => $vendor->contact?->full_name),
                 Tables\Columns\TextColumn::make('contact.email')
-                    ->label('Email')
+                    ->label(translate('Email'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('contact.first_available_phone')
-                    ->label('Phone')
+                    ->label(translate('Phone'))
                     ->state(static fn (Vendor $vendor) => $vendor->contact?->first_available_phone),
                 Tables\Columns\TextColumn::make('address.address_string')
-                    ->label('Address')
+                    ->label(translate('Address'))
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->listWithLineBreaks(),
                 Tables\Columns\TextColumn::make('payable_balance')
-                    ->label('Payable balance')
+                    ->label(translate('Payable balance'))
                     ->getStateUsing(function (Vendor $vendor) {
                         return $vendor->bills()
                             ->unpaid()
@@ -197,7 +212,9 @@ class VendorResource extends Resource
 
                         $formattedOverdue = CurrencyConverter::formatCentsToMoney($overdue);
 
-                        return "Overdue: {$formattedOverdue}";
+                        return translate('Overdue: :amount', [
+                            'amount' => $formattedOverdue,
+                        ]);
                     })
                     ->sortable(query: function (Builder $query, string $direction) {
                         return $query

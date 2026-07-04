@@ -29,7 +29,7 @@ class IncomeStatementReportTransformer extends SummaryReportTransformer
 
     public function getTitle(): string
     {
-        return 'Income Statement';
+        return translate('Income Statement');
     }
 
     public function calculateTotals(): void

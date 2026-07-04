@@ -36,6 +36,16 @@ class AccountChart extends Page
 
     protected static string $view = 'filament.company.pages.accounting.chart';
 
+    public function getTitle(): string
+    {
+        return translate(static::$title);
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return translate(static::$title);
+    }
+
     #[Url]
     public ?string $activeTab = AccountCategory::Asset->value;
 
@@ -61,7 +71,7 @@ class AccountChart extends Page
     public function editAccountAction(): Action
     {
         return EditAction::make('editAccount')
-            ->label('Edit account')
+            ->label(translate('Edit account'))
             ->iconButton()
             ->icon('heroicon-m-pencil-square')
             ->record(fn (array $arguments) => Account::find($arguments['account']))
@@ -73,7 +83,7 @@ class AccountChart extends Page
         return CreateAction::make('createAccount')
             ->link()
             ->model(Account::class)
-            ->label('Add a new account')
+            ->label(translate('Add a new account'))
             ->icon('heroicon-o-plus-circle')
             ->form(fn (Form $form) => $this->getAccountForm($form)->operation('create'))
             ->fillForm(fn (array $arguments): array => $this->getAccountFormDefaults($arguments['accountSubtype']));
@@ -107,7 +117,7 @@ class AccountChart extends Page
     protected function getTypeFormComponent(bool $useActiveTab = true): Component
     {
         return Select::make('subtype_id')
-            ->label('Type')
+            ->label(translate('Type'))
             ->required()
             ->live()
             ->disabledOn('edit')
@@ -129,7 +139,7 @@ class AccountChart extends Page
     protected function getCodeFormComponent(): Component
     {
         return TextInput::make('code')
-            ->label('Code')
+            ->label(translate('Code'))
             ->required()
             ->hiddenOn('edit')
             ->validationAttribute('account code')
@@ -193,7 +203,7 @@ class AccountChart extends Page
                 ->relationship('bankAccount')
                 ->schema([
                     Select::make('type')
-                        ->label('Bank account type')
+                        ->label(translate('Bank account type'))
                         ->options(function (Get $get) {
                             $accountSubtypeId = $get('../subtype_id');
 
@@ -226,7 +236,7 @@ class AccountChart extends Page
                         ->disabledOn('edit')
                         ->required(),
                     TextInput::make('number')
-                        ->label('Bank account number')
+                        ->label(translate('Bank account number'))
                         ->unique(ignoreRecord: true, modifyRuleUsing: static function (Unique $rule, $state) {
                             $companyId = Auth::user()->currentCompany->id;
 
@@ -252,7 +262,7 @@ class AccountChart extends Page
     protected function getNameFormComponent(): Component
     {
         return TextInput::make('name')
-            ->label('Name')
+            ->label(translate('Name'))
             ->required();
     }
 
@@ -273,14 +283,14 @@ class AccountChart extends Page
     protected function getDescriptionFormComponent(): Component
     {
         return Textarea::make('description')
-            ->label('Description');
+            ->label(translate('Description'));
     }
 
     protected function getArchiveFormComponent(): Component
     {
         return Checkbox::make('archived')
-            ->label('Archive account')
-            ->helperText('Archived accounts will not be available for selection in transactions, offerings, or other new records.')
+            ->label(translate('Archive account'))
+            ->helperText(translate('Archived accounts will not be available for selection in transactions, offerings, or other new records.'))
             ->hiddenOn('create');
     }
 

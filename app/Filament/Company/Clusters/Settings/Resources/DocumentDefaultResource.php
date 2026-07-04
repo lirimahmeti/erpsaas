@@ -42,7 +42,7 @@ class DocumentDefaultResource extends Resource
 
     public static function getGeneralSection(): Forms\Components\Component
     {
-        return Forms\Components\Section::make('General')
+        return Forms\Components\Section::make(translate('General'))
             ->schema([
                 Forms\Components\TextInput::make('number_prefix')
                     ->localizeLabel()
@@ -59,7 +59,7 @@ class DocumentDefaultResource extends Resource
 
     public static function getContentSection(): Forms\Components\Component
     {
-        return Forms\Components\Section::make('Content')
+        return Forms\Components\Section::make(translate('Content'))
             ->hidden(static fn (DocumentDefault $record) => $record->type === DocumentType::Bill)
             ->schema([
                 Forms\Components\TextInput::make('header')
@@ -79,8 +79,8 @@ class DocumentDefaultResource extends Resource
 
     public static function getTemplateSection(): Component
     {
-        return Forms\Components\Section::make('Template')
-            ->description('Choose the template and edit the column names.')
+        return Forms\Components\Section::make(translate('Template'))
+            ->description(translate('Choose the template and edit the column names.'))
             ->hidden(static fn (DocumentDefault $record) => $record->type === DocumentType::Bill)
             ->schema([
                 Forms\Components\Grid::make(1)
@@ -131,7 +131,7 @@ class DocumentDefaultResource extends Resource
 
     public static function getBillColumnLabelsSection(): Component
     {
-        return Forms\Components\Section::make('Column Labels')
+        return Forms\Components\Section::make(translate('Column Labels'))
             ->visible(static fn (DocumentDefault $record) => $record->type === DocumentType::Bill)
             ->schema(static::getColumnLabelsSchema())->columns();
     }

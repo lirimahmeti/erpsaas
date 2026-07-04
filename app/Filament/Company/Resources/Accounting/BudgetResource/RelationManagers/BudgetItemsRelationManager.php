@@ -85,7 +85,7 @@ class BudgetItemsRelationManager extends RelationManager
         $this->batchChanges = [];
 
         Notification::make()
-            ->title('Budget allocations updated')
+            ->title(translate('Budget allocations updated'))
             ->success()
             ->send();
     }
@@ -148,17 +148,17 @@ class BudgetItemsRelationManager extends RelationManager
             ->defaultGroup('account.category')
             ->headerActions([
                 Action::make('saveBatchChanges')
-                    ->label('Save all changes')
+                    ->label(translate('Save all changes'))
                     ->action('saveBatchChanges')
                     ->color('primary'),
             ])
             ->columns([
                 TextColumn::make('account.name')
-                    ->label('Account')
+                    ->label(translate('Account'))
                     ->limit(30)
                     ->searchable(),
                 CustomTextInputColumn::make(self::TOTAL_COLUMN)
-                    ->label('Total')
+                    ->label(translate('Total'))
                     ->alignRight()
                     ->mask(RawJs::make('$money($input)'))
                     ->getStateUsing(function (BudgetItem $record) {
@@ -213,10 +213,10 @@ class BudgetItemsRelationManager extends RelationManager
                     ->color('primary')
                     ->label('')
                     ->default('')
-                    ->tooltip('Disperse total across periods')
+                    ->tooltip(translate('Disperse total across periods'))
                     ->action(
                         Action::make('disperse')
-                            ->label('Disperse')
+                            ->label(translate('Disperse'))
                             ->action(function (BudgetItem $record) use ($allocationPeriods) {
                                 if (empty($allocationPeriods)) {
                                     return;
@@ -283,7 +283,7 @@ class BudgetItemsRelationManager extends RelationManager
             ])
             ->bulkActions([
                 BulkAction::make('clearAllocations')
-                    ->label('Clear Allocations')
+                    ->label(translate('Clear Allocations'))
                     ->icon('heroicon-o-trash')
                     ->color('danger')
                     ->requiresConfirmation()

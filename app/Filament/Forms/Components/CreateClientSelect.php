@@ -41,9 +41,9 @@ class CreateClientSelect extends Select
     protected function createClientAction(Action $action): Action
     {
         return $action
-            ->label('Create client')
+            ->label(translate('Create client'))
             ->slideOver()
             ->modalWidth(MaxWidth::ThreeExtraLarge)
-            ->modalHeading('Create a new client');
+            ->modalHeading(translate('Create a new client'));
     }
 }

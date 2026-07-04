@@ -60,20 +60,20 @@ class AccountTransactions extends BaseReportPage
     {
         return [
             Column::make('date')
-                ->label('DATE')
+                ->label(translate('DATE'))
                 ->markAsDate()
                 ->alignment(Alignment::Left),
             Column::make('description')
-                ->label('DESCRIPTION')
+                ->label(translate('DESCRIPTION'))
                 ->alignment(Alignment::Left),
             Column::make('debit')
-                ->label('DEBIT')
+                ->label(translate('DEBIT'))
                 ->alignment(Alignment::Right),
             Column::make('credit')
-                ->label('CREDIT')
+                ->label(translate('CREDIT'))
                 ->alignment(Alignment::Right),
             Column::make('balance')
-                ->label('RUNNING BALANCE')
+                ->label(translate('RUNNING BALANCE'))
                 ->alignment(Alignment::Right),
         ];
     }
@@ -84,7 +84,7 @@ class AccountTransactions extends BaseReportPage
             ->columns(5)
             ->schema([
                 Select::make('selectedAccount')
-                    ->label('Account')
+                    ->label(translate('Account'))
                     ->options($this->getAccountOptions())
                     ->selectablePlaceholder(false)
                     ->searchable(),
@@ -96,13 +96,13 @@ class AccountTransactions extends BaseReportPage
                     'class' => 'report-hidden-label',
                 ]),
                 Select::make('selectedPayee')
-                    ->label('Payee')
+                    ->label(translate('Payee'))
                     ->options($this->getEntityOptions())
                     ->searchable()
                     ->selectablePlaceholder(false),
                 Actions::make([
                     Actions\Action::make('applyFilters')
-                        ->label('Update report')
+                        ->label(translate('Update report'))
                         ->action('applyFilters')
                         ->keyBindings(['mod+s'])
                         ->button(),
@@ -193,7 +193,7 @@ class AccountTransactions extends BaseReportPage
     {
         return [
             Action::make('createTransaction')
-                ->label('Create transaction')
+                ->label(translate('Create transaction'))
                 ->url(TransactionResource::getUrl()),
         ];
     }

@@ -31,7 +31,7 @@ class DepartmentResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('General')
+                Forms\Components\Section::make(translate('General'))
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->autofocus()

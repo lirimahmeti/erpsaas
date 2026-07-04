@@ -35,18 +35,18 @@ class ViewVendor extends ViewRecord
     {
         return [
             EditAction::make()
-                ->label('Edit vendor')
+                ->label(translate('Edit vendor'))
                 ->outlined(),
             ActionGroup::make([
                 ActionGroup::make([
                     Action::make('newBill')
-                        ->label('New bill')
+                        ->label(translate('New bill'))
                         ->icon('heroicon-m-document-plus')
                         ->url(CreateBill::getUrl(['vendor' => $this->record->getKey()])),
                 ])->dropdown(false),
                 DeleteAction::make(),
             ])
-                ->label('Actions')
+                ->label(translate('Actions'))
                 ->button()
                 ->outlined()
                 ->dropdownPlacement('bottom-end')
@@ -66,25 +66,25 @@ class ViewVendor extends ViewRecord
     {
         return $infolist
             ->schema([
-                Section::make('General')
+                Section::make(translate('General'))
                     ->columns()
                     ->schema([
                         TextEntry::make('contact.full_name')
-                            ->label('Contact'),
+                            ->label(translate('Contact')),
                         TextEntry::make('contact.email')
-                            ->label('Email'),
+                            ->label(translate('Email')),
                         TextEntry::make('contact.first_available_phone')
-                            ->label('Primary phone'),
+                            ->label(translate('Primary phone')),
                         TextEntry::make('website')
-                            ->label('Website')
+                            ->label(translate('Website'))
                             ->url(static fn ($state) => $state, true)
                             ->link(),
                     ]),
-                Section::make('Additional Details')
+                Section::make(translate('Additional Details'))
                     ->columns()
                     ->schema([
                         TextEntry::make('address.address_string')
-                            ->label('Billing address')
+                            ->label(translate('Billing address'))
                             ->listWithLineBreaks(),
                         TextEntry::make('notes'),
                     ]),

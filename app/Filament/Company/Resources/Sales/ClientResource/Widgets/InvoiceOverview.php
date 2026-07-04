@@ -74,7 +74,7 @@ class InvoiceOverview extends EnhancedStatsOverviewWidget
                 ->suffix('days'),
             EnhancedStatsOverviewWidget\EnhancedStat::make('Average Invoice Total', CurrencyConverter::formatCentsToMoney($averageInvoiceTotal))
                 ->suffix(CurrencyAccessor::getDefaultCurrency())
-                ->description('Excludes draft and voided invoices'),
+                ->description(translate('Excludes draft and voided invoices')),
         ];
     }
 }

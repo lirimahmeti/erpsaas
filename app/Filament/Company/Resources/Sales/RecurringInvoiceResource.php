@@ -41,6 +41,21 @@ class RecurringInvoiceResource extends Resource
 {
     protected static ?string $model = RecurringInvoice::class;
 
+    public static function getModelLabel(): string
+    {
+        return translate('recurring invoice');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return translate('recurring invoices');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return translate('Recurring Invoices');
+    }
+
     public static function form(Form $form): Form
     {
         $company = Auth::user()->currentCompany;
@@ -49,15 +64,15 @@ class RecurringInvoiceResource extends Resource
 
         return $form
             ->schema([
-                DocumentHeaderSection::make('Invoice Header')
+                DocumentHeaderSection::make(translate('Invoice Header'))
                     ->defaultHeader($settings->header)
                     ->defaultSubheader($settings->subheader),
-                Forms\Components\Section::make('Invoice Details')
+                Forms\Components\Section::make(translate('Invoice Details'))
                     ->schema([
                         Forms\Components\Split::make([
                             Forms\Components\Group::make([
                                 CreateClientSelect::make('client_id')
-                                    ->label('Client')
+                                    ->label(translate('Client'))
                                     ->required()
                                     ->live()
                                     ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get, $state) {
@@ -75,21 +90,21 @@ class RecurringInvoiceResource extends Resource
                             ]),
                             Forms\Components\Group::make([
                                 Forms\Components\Placeholder::make('invoice_number')
-                                    ->label('Invoice number')
-                                    ->content('Auto-generated'),
+                                    ->label(translate('Invoice number'))
+                                    ->content(translate('Auto-generated')),
                                 Forms\Components\TextInput::make('order_number')
-                                    ->label('P.O/S.O Number'),
+                                    ->label(translate('P.O/S.O Number')),
                                 Forms\Components\Placeholder::make('date')
-                                    ->label('Invoice date')
-                                    ->content('Auto-generated'),
+                                    ->label(translate('Invoice date'))
+                                    ->content(translate('Auto-generated')),
                                 Forms\Components\Select::make('payment_terms')
-                                    ->label('Payment due')
+                                    ->label(translate('Payment due'))
                                     ->options(PaymentTerms::class)
                                     ->softRequired()
                                     ->default($settings->payment_terms)
                                     ->live(),
                                 Forms\Components\Select::make('discount_method')
-                                    ->label('Discount method')
+                                    ->label(translate('Discount method'))
                                     ->options(DocumentDiscountMethod::class)
                                     ->softRequired()
                                     ->default($settings->discount_method)
@@ -112,7 +127,7 @@ class RecurringInvoiceResource extends Resource
                             ->orderColumn('line_number')
                             ->reorderAtStart()
                             ->cloneable()
-                            ->addActionLabel('Add an item')
+                            ->addActionLabel(translate('Add an item'))
                             ->headers(function (Forms\Get $get) use ($settings) {
                                 $hasDiscounts = DocumentDiscountMethod::parse($get('discount_method'))->isPerLineItem();
 
@@ -140,9 +155,9 @@ class RecurringInvoiceResource extends Resource
                             ->schema([
                                 Forms\Components\Group::make([
                                     CreateOfferingSelect::make('offering_id')
-                                        ->label('Item')
+                                        ->label(translate('Item'))
                                         ->hiddenLabel()
-                                        ->placeholder('Select item')
+                                        ->placeholder(translate('Select item'))
                                         ->required()
                                         ->live()
                                         ->inlineSuffix()
@@ -197,7 +212,7 @@ class RecurringInvoiceResource extends Resource
                                             }
                                         }),
                                     Forms\Components\TextInput::make('description')
-                                        ->placeholder('Enter item description')
+                                        ->placeholder(translate('Enter item description'))
                                         ->hiddenLabel(),
                                 ])->columnSpan(1),
                                 Forms\Components\TextInput::make('quantity')
@@ -213,9 +228,9 @@ class RecurringInvoiceResource extends Resource
                                     ->default(0),
                                 Forms\Components\Group::make([
                                     CreateAdjustmentSelect::make('salesTaxes')
-                                        ->label('Taxes')
+                                        ->label(translate('Taxes'))
                                         ->hiddenLabel()
-                                        ->placeholder('Select taxes')
+                                        ->placeholder(translate('Select taxes'))
                                         ->category(AdjustmentCategory::Tax)
                                         ->type(AdjustmentType::Sales)
                                         ->adjustmentsRelationship('salesTaxes')
@@ -227,9 +242,9 @@ class RecurringInvoiceResource extends Resource
                                         ->live()
                                         ->searchable(),
                                     CreateAdjustmentSelect::make('salesDiscounts')
-                                        ->label('Discounts')
+                                        ->label(translate('Discounts'))
                                         ->hiddenLabel()
-                                        ->placeholder('Select discounts')
+                                        ->placeholder(translate('Select discounts'))
                                         ->category(AdjustmentCategory::Discount)
                                         ->type(AdjustmentType::Sales)
                                         ->adjustmentsRelationship('salesDiscounts')
@@ -293,7 +308,7 @@ class RecurringInvoiceResource extends Resource
                             ->default($settings->terms)
                             ->columnSpanFull(),
                     ]),
-                DocumentFooterSection::make('Invoice Footer')
+                DocumentFooterSection::make(translate('Invoice Footer'))
                     ->defaultFooter($settings->footer),
             ]);
     }
@@ -312,7 +327,7 @@ class RecurringInvoiceResource extends Resource
                     ->searchable()
                     ->hiddenOn(RecurringInvoicesRelationManager::class),
                 Tables\Columns\TextColumn::make('schedule')
-                    ->label('Schedule')
+                    ->label(translate('Schedule'))
                     ->getStateUsing(function (RecurringInvoice $record) {
                         return $record->getScheduleDescription();
                     })
@@ -320,22 +335,22 @@ class RecurringInvoiceResource extends Resource
                         return $record->getTimelineDescription();
                     }),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created')
+                    ->label(translate('Created'))
                     ->date()
                     ->sortable()
                     ->showOnTabs(['draft']),
                 Tables\Columns\TextColumn::make('start_date')
-                    ->label('First invoice')
+                    ->label(translate('First invoice'))
                     ->date()
                     ->sortable()
                     ->showOnTabs(['draft']),
                 Tables\Columns\TextColumn::make('last_date')
-                    ->label('Last invoice')
+                    ->label(translate('Last invoice'))
                     ->date()
                     ->sortable()
                     ->hideOnTabs(['draft']),
                 Tables\Columns\TextColumn::make('next_date')
-                    ->label('Next invoice')
+                    ->label(translate('Next invoice'))
                     ->date()
                     ->sortable()
                     ->hideOnTabs(['draft']),

@@ -17,11 +17,11 @@ class ClientExporter extends Exporter
             ExportColumn::make('name'),
             ExportColumn::make('account_number'),
             ExportColumn::make('primaryContact.full_name')
-                ->label('Primary contact'),
+                ->label(translate('Primary contact')),
             ExportColumn::make('primaryContact.email')
-                ->label('Email'),
+                ->label(translate('Email')),
             ExportColumn::make('primaryContact.first_available_phone')
-                ->label('Phone'),
+                ->label(translate('Phone')),
             ExportColumn::make('currency_code'),
             ExportColumn::make('balance') // TODO: Potentially find an easier way to calculate this
                 ->state(function (Client $record) {
@@ -40,49 +40,49 @@ class ClientExporter extends Exporter
                 })
                 ->money(),
             ExportColumn::make('billingAddress.address_string')
-                ->label('Billing address')
+                ->label(translate('Billing address'))
                 ->enabledByDefault(false),
             ExportColumn::make('billingAddress.address_line_1')
-                ->label('Billing address line 1'),
+                ->label(translate('Billing address line 1')),
             ExportColumn::make('billingAddress.address_line_2')
-                ->label('Billing address line 2'),
+                ->label(translate('Billing address line 2')),
             ExportColumn::make('billingAddress.city')
-                ->label('Billing city'),
+                ->label(translate('Billing city')),
             ExportColumn::make('billingAddress.state.name')
-                ->label('Billing state'),
+                ->label(translate('Billing state')),
             ExportColumn::make('billingAddress.postal_code')
-                ->label('Billing postal code'),
+                ->label(translate('Billing postal code')),
             ExportColumn::make('billingAddress.country.name')
-                ->label('Billing country'),
+                ->label(translate('Billing country')),
             ExportColumn::make('shippingAddress.recipient')
-                ->label('Shipping recipient')
+                ->label(translate('Shipping recipient'))
                 ->enabledByDefault(false),
             ExportColumn::make('shippingAddress.phone')
-                ->label('Shipping phone')
+                ->label(translate('Shipping phone'))
                 ->enabledByDefault(false),
             ExportColumn::make('shippingAddress.address_string')
-                ->label('Shipping address')
+                ->label(translate('Shipping address'))
                 ->enabledByDefault(false),
             ExportColumn::make('shippingAddress.address_line_1')
-                ->label('Shipping address line 1')
+                ->label(translate('Shipping address line 1'))
                 ->enabledByDefault(false),
             ExportColumn::make('shippingAddress.address_line_2')
-                ->label('Shipping address line 2')
+                ->label(translate('Shipping address line 2'))
                 ->enabledByDefault(false),
             ExportColumn::make('shippingAddress.city')
-                ->label('Shipping city')
+                ->label(translate('Shipping city'))
                 ->enabledByDefault(false),
             ExportColumn::make('shippingAddress.state.name')
-                ->label('Shipping state')
+                ->label(translate('Shipping state'))
                 ->enabledByDefault(false),
             ExportColumn::make('shippingAddress.postal_code')
-                ->label('Shipping postal code')
+                ->label(translate('Shipping postal code'))
                 ->enabledByDefault(false),
             ExportColumn::make('shippingAddress.country.name')
-                ->label('Shipping country')
+                ->label(translate('Shipping country'))
                 ->enabledByDefault(false),
             ExportColumn::make('shippingAddress.notes')
-                ->label('Delivery instructions')
+                ->label(translate('Delivery instructions'))
                 ->enabledByDefault(false),
             ExportColumn::make('website')
                 ->enabledByDefault(false),

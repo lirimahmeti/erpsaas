@@ -82,18 +82,18 @@ trait HasTransactionAction
         return $form
             ->schema([
                 Forms\Components\DatePicker::make('posted_at')
-                    ->label('Date')
+                    ->label(translate('Date'))
                     ->required(),
                 Forms\Components\TextInput::make('description')
-                    ->label('Description'),
+                    ->label(translate('Description')),
                 Forms\Components\Select::make('bank_account_id')
-                    ->label('Account')
+                    ->label(translate('Account'))
                     ->options(fn (?Transaction $transaction) => Transaction::getBankAccountOptions(currentBankAccountId: $transaction?->bank_account_id))
                     ->live()
                     ->searchable()
                     ->required(),
                 Forms\Components\Select::make('type')
-                    ->label('Type')
+                    ->label(translate('Type'))
                     ->live()
                     ->options([
                         TransactionType::Deposit->value => TransactionType::Deposit->getLabel(),
@@ -102,16 +102,16 @@ trait HasTransactionAction
                     ->required()
                     ->afterStateUpdated(static fn (Forms\Set $set, $state) => $set('account_id', Transaction::getUncategorizedAccountByType(TransactionType::parse($state))?->id)),
                 Forms\Components\TextInput::make('amount')
-                    ->label('Amount')
+                    ->label(translate('Amount'))
                     ->money(static fn (Forms\Get $get) => BankAccount::find($get('bank_account_id'))?->account?->currency_code ?? CurrencyAccessor::getDefaultCurrency())
                     ->required(),
                 Forms\Components\Select::make('account_id')
-                    ->label('Category')
+                    ->label(translate('Category'))
                     ->options(fn (Forms\Get $get, ?Transaction $transaction) => Transaction::getTransactionAccountOptions(type: TransactionType::parse($get('type')), currentAccountId: $transaction?->account_id))
                     ->searchable()
                     ->required(),
                 Forms\Components\Textarea::make('notes')
-                    ->label('Notes')
+                    ->label(translate('Notes'))
                     ->autosize()
                     ->rows(10)
                     ->columnSpanFull(),
@@ -124,18 +124,18 @@ trait HasTransactionAction
         return $form
             ->schema([
                 Forms\Components\DatePicker::make('posted_at')
-                    ->label('Date')
+                    ->label(translate('Date'))
                     ->required(),
                 Forms\Components\TextInput::make('description')
-                    ->label('Description'),
+                    ->label(translate('Description')),
                 Forms\Components\Select::make('bank_account_id')
-                    ->label('From account')
+                    ->label(translate('From account'))
                     ->options(fn (Forms\Get $get, ?Transaction $transaction) => Transaction::getBankAccountOptions(excludedAccountId: $get('account_id'), currentBankAccountId: $transaction?->bank_account_id))
                     ->live()
                     ->searchable()
                     ->required(),
                 Forms\Components\Select::make('type')
-                    ->label('Type')
+                    ->label(translate('Type'))
                     ->options([
                         TransactionType::Transfer->value => TransactionType::Transfer->getLabel(),
                     ])
@@ -143,17 +143,17 @@ trait HasTransactionAction
                     ->dehydrated()
                     ->required(),
                 Forms\Components\TextInput::make('amount')
-                    ->label('Amount')
+                    ->label(translate('Amount'))
                     ->money(static fn (Forms\Get $get) => BankAccount::find($get('bank_account_id'))?->account?->currency_code ?? CurrencyAccessor::getDefaultCurrency())
                     ->required(),
                 Forms\Components\Select::make('account_id')
-                    ->label('To account')
+                    ->label(translate('To account'))
                     ->live()
                     ->options(fn (Forms\Get $get, ?Transaction $transaction) => Transaction::getBankAccountAccountOptions(excludedBankAccountId: $get('bank_account_id'), currentAccountId: $transaction?->account_id))
                     ->searchable()
                     ->required(),
                 Forms\Components\Textarea::make('notes')
-                    ->label('Notes')
+                    ->label(translate('Notes'))
                     ->autosize()
                     ->rows(10)
                     ->columnSpanFull(),
@@ -178,7 +178,7 @@ trait HasTransactionAction
     protected function getJournalTransactionFormEditTab(): Forms\Components\Tabs\Tab
     {
         return Forms\Components\Tabs\Tab::make('Edit')
-            ->label('Edit')
+            ->label(translate('Edit'))
             ->icon('heroicon-o-pencil-square')
             ->schema([
                 $this->getTransactionDetailsGrid(),
@@ -189,13 +189,13 @@ trait HasTransactionAction
     protected function getJournalTransactionFormNotesTab(): Forms\Components\Tabs\Tab
     {
         return Forms\Components\Tabs\Tab::make('Notes')
-            ->label('Notes')
+            ->label(translate('Notes'))
             ->icon('heroicon-o-clipboard')
             ->id('notes')
             ->schema([
                 $this->getTransactionDetailsGrid(),
                 Forms\Components\Textarea::make('notes')
-                    ->label('Notes')
+                    ->label(translate('Notes'))
                     ->rows(10)
                     ->autosize(),
             ]);
@@ -206,10 +206,10 @@ trait HasTransactionAction
         return Forms\Components\Grid::make(6)
             ->schema([
                 Forms\Components\DatePicker::make('posted_at')
-                    ->label('Date')
+                    ->label(translate('Date'))
                     ->softRequired(),
                 Forms\Components\TextInput::make('description')
-                    ->label('Description')
+                    ->label(translate('Description'))
                     ->columnSpan(2),
             ]);
     }
@@ -302,16 +302,16 @@ trait HasTransactionAction
         return [
             Header::make('type')
                 ->width('150px')
-                ->label('Type'),
+                ->label(translate('Type')),
             Header::make('description')
                 ->width('320px')
-                ->label('Description'),
+                ->label(translate('Description')),
             Header::make('account_id')
                 ->width('320px')
-                ->label('Account'),
+                ->label(translate('Account')),
             Header::make('amount')
                 ->width('192px')
-                ->label('Amount'),
+                ->label(translate('Amount')),
         ];
     }
 
@@ -319,7 +319,7 @@ trait HasTransactionAction
     {
         return [
             Forms\Components\Select::make('type')
-                ->label('Type')
+                ->label(translate('Type'))
                 ->options(JournalEntryType::class)
                 ->live()
                 ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set, $state, $old) {
@@ -327,14 +327,14 @@ trait HasTransactionAction
                 })
                 ->softRequired(),
             Forms\Components\TextInput::make('description')
-                ->label('Description'),
+                ->label(translate('Description')),
             Forms\Components\Select::make('account_id')
-                ->label('Account')
+                ->label(translate('Account'))
                 ->options(fn (?JournalEntry $journalEntry): array => Transaction::getJournalAccountOptions(currentAccountId: $journalEntry?->account_id))
                 ->softRequired()
                 ->searchable(),
             Forms\Components\TextInput::make('amount')
-                ->label('Amount')
+                ->label(translate('Amount'))
                 ->live(onBlur: true)
                 ->money()
                 ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set, ?string $state, ?string $old) {

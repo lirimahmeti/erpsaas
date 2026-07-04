@@ -22,11 +22,11 @@ class VendorExporter extends Exporter
                 ->enum(),
             ExportColumn::make('account_number'),
             ExportColumn::make('contact.full_name')
-                ->label('Primary contact'),
+                ->label(translate('Primary contact')),
             ExportColumn::make('contact.email')
-                ->label('Email'),
+                ->label(translate('Email')),
             ExportColumn::make('contact.first_available_phone')
-                ->label('Phone'),
+                ->label(translate('Phone')),
             ExportColumn::make('currency_code'),
             ExportColumn::make('balance')
                 ->state(function (Vendor $record) {
@@ -45,25 +45,25 @@ class VendorExporter extends Exporter
                 })
                 ->money(),
             ExportColumn::make('address.address_string')
-                ->label('Address')
+                ->label(translate('Address'))
                 ->enabledByDefault(false),
             ExportColumn::make('address.address_line_1')
-                ->label('Address line 1'),
+                ->label(translate('Address line 1')),
             ExportColumn::make('address.address_line_2')
-                ->label('Address line 2'),
+                ->label(translate('Address line 2')),
             ExportColumn::make('address.city')
-                ->label('City'),
+                ->label(translate('City')),
             ExportColumn::make('address.state.name')
-                ->label('State'),
+                ->label(translate('State')),
             ExportColumn::make('address.postal_code')
-                ->label('Postal code'),
+                ->label(translate('Postal code')),
             ExportColumn::make('address.country.name')
-                ->label('Country'),
+                ->label(translate('Country')),
             ExportColumn::make('ssn')
-                ->label('SSN')
+                ->label(translate('SSN'))
                 ->enabledByDefault(false),
             ExportColumn::make('ein')
-                ->label('EIN')
+                ->label(translate('EIN'))
                 ->enabledByDefault(false),
             ExportColumn::make('website')
                 ->enabledByDefault(false),

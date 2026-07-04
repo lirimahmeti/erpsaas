@@ -45,7 +45,7 @@ class UserPanelProvider extends PanelProvider
                             ->items([
                                 ...Account::getNavigationItems(),
                                 NavigationItem::make('company')
-                                    ->label('Company Dashboard')
+                                    ->label(translate('Company Dashboard'))
                                     ->icon('heroicon-s-building-office-2')
                                     ->url(static function (): ?string {
                                         $user = Auth::user();

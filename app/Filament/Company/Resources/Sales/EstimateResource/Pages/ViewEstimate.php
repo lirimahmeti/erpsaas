@@ -29,7 +29,7 @@ class ViewEstimate extends ViewRecord
     {
         return [
             Actions\EditAction::make()
-                ->label('Edit estimate')
+                ->label(translate('Edit estimate'))
                 ->outlined(),
             Actions\ActionGroup::make([
                 Actions\ActionGroup::make([
@@ -43,7 +43,7 @@ class ViewEstimate extends ViewRecord
                 ])->dropdown(false),
                 Actions\DeleteAction::make(),
             ])
-                ->label('Actions')
+                ->label(translate('Actions'))
                 ->button()
                 ->outlined()
                 ->dropdownPlacement('bottom-end')
@@ -57,7 +57,7 @@ class ViewEstimate extends ViewRecord
         return $infolist
             ->schema([
                 BannerEntry::make('inactiveAdjustments')
-                    ->label('Inactive adjustments')
+                    ->label(translate('Inactive adjustments'))
                     ->warning()
                     ->icon('heroicon-o-exclamation-triangle')
                     ->visible(fn (Estimate $record) => $record->hasInactiveAdjustments() && $record->canBeApproved())
@@ -81,30 +81,30 @@ class ViewEstimate extends ViewRecord
 
                         return new HtmlString($output);
                     }),
-                Section::make('Estimate Details')
+                Section::make(translate('Estimate Details'))
                     ->columns(4)
                     ->schema([
                         Grid::make(1)
                             ->schema([
                                 TextEntry::make('estimate_number')
-                                    ->label('Estimate #'),
+                                    ->label(translate('Estimate #')),
                                 TextEntry::make('status')
                                     ->badge(),
                                 TextEntry::make('client.name')
-                                    ->label('Client')
+                                    ->label(translate('Client'))
                                     ->url(static fn (Estimate $record) => $record->client_id ? ClientResource::getUrl('view', ['record' => $record->client_id]) : null)
                                     ->link(),
                                 TextEntry::make('expiration_date')
-                                    ->label('Expiration date')
+                                    ->label(translate('Expiration date'))
                                     ->asRelativeDay(),
                                 TextEntry::make('approved_at')
-                                    ->label('Approved at')
+                                    ->label(translate('Approved at'))
                                     ->date(),
                                 TextEntry::make('last_sent_at')
-                                    ->label('Last sent')
+                                    ->label(translate('Last sent'))
                                     ->date(),
                                 TextEntry::make('accepted_at')
-                                    ->label('Accepted at')
+                                    ->label(translate('Accepted at'))
                                     ->date(),
                             ])->columnSpan(1),
                         DocumentPreview::make()

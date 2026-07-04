@@ -9,7 +9,7 @@ class Columns
     public static function id(): TextColumn
     {
         return TextColumn::make('id')
-            ->label('ID')
+            ->label(translate('ID'))
             ->sortable()
             ->toggleable(isToggledHiddenByDefault: true)
             ->searchable();

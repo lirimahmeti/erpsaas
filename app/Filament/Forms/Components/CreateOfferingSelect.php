@@ -88,10 +88,10 @@ class CreateOfferingSelect extends Select
     protected function createOfferingAction(Action $action): Action
     {
         return $action
-            ->label('Create offering')
+            ->label(translate('Create offering'))
             ->slideOver()
             ->modalWidth(MaxWidth::ThreeExtraLarge)
-            ->modalHeading('Create a new offering');
+            ->modalHeading(translate('Create a new offering'));
     }
 
     public function isSellable(): bool

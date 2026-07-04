@@ -531,7 +531,7 @@ class Invoice extends Document
     public static function getBlockedApproveAction(string $action = Action::class): MountableAction
     {
         return $action::make('blockedApprove')
-            ->label('Approve')
+            ->label(translate('Approve'))
             ->icon('heroicon-m-check-circle')
             ->visible(fn (self $record) => $record->canBeApproved() && $record->hasInactiveAdjustments())
             ->requiresConfirmation()
@@ -561,7 +561,7 @@ class Invoice extends Document
                 return new HtmlString($output);
             })
             ->modalSubmitAction(function (StaticAction $action, self $record) {
-                $action->label('Edit Invoice')
+                $action->label(translate('Edit Invoice'))
                     ->url(InvoiceResource\Pages\EditInvoice::getUrl(['record' => $record->id]));
             });
     }
@@ -569,14 +569,14 @@ class Invoice extends Document
     public static function getApproveDraftAction(string $action = Action::class): MountableAction
     {
         return $action::make('approveDraft')
-            ->label('Approve')
+            ->label(translate('Approve'))
             ->icon('heroicon-m-check-circle')
             ->visible(function (self $record) {
                 return $record->canBeApproved();
             })
             ->requiresConfirmation()
             ->databaseTransaction()
-            ->successNotificationTitle('Invoice approved')
+            ->successNotificationTitle(translate('Invoice approved'))
             ->action(function (self $record, MountableAction $action, Component $livewire) {
                 if ($record->hasInactiveAdjustments()) {
                     $isViewPage = $livewire instanceof InvoiceResource\Pages\ViewInvoice;
@@ -586,8 +586,8 @@ class Invoice extends Document
                     } else {
                         Notification::make()
                             ->warning()
-                            ->title('Cannot approve invoice')
-                            ->body('This invoice has inactive adjustments that must be addressed first.')
+                            ->title(translate('Cannot approve invoice'))
+                            ->body(translate('This invoice has inactive adjustments that must be addressed first.'))
                             ->persistent()
                             ->send();
                     }
@@ -602,12 +602,12 @@ class Invoice extends Document
     public static function getMarkAsSentAction(string $action = Action::class): MountableAction
     {
         return $action::make('markAsSent')
-            ->label('Mark as sent')
+            ->label(translate('Mark as sent'))
             ->icon('heroicon-m-paper-airplane')
             ->visible(static function (self $record) {
                 return $record->canBeMarkedAsSent();
             })
-            ->successNotificationTitle('Invoice sent')
+            ->successNotificationTitle(translate('Invoice sent'))
             ->action(function (self $record, MountableAction $action) {
                 $record->markAsSent();
 

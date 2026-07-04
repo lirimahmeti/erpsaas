@@ -41,16 +41,16 @@ class ListEstimates extends ListRecords
     {
         return [
             'all' => Tab::make()
-                ->label('All'),
+                ->label(translate('All')),
 
             'active' => Tab::make()
-                ->label('Active')
+                ->label(translate('Active'))
                 ->modifyQueryUsing(function (Builder $query) {
                     $query->active();
                 }),
 
             'draft' => Tab::make()
-                ->label('Draft')
+                ->label(translate('Draft'))
                 ->modifyQueryUsing(function (Builder $query) {
                     $query->where('status', EstimateStatus::Draft);
                 }),

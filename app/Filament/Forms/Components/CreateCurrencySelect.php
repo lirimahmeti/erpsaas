@@ -63,9 +63,9 @@ class CreateCurrencySelect extends Select
     protected function createCurrencyAction(Action $action): Action
     {
         return $action
-            ->label('Create currency')
+            ->label(translate('Create currency'))
             ->slideOver()
             ->modalWidth(MaxWidth::Medium)
-            ->modalHeading('Create a new currency');
+            ->modalHeading(translate('Create a new currency'));
     }
 }

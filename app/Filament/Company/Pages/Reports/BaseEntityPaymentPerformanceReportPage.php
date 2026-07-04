@@ -49,23 +49,23 @@ abstract class BaseEntityPaymentPerformanceReportPage extends BaseReportPage
                 ->label("Total {$this->getDocumentType()->getPluralLabel()}")
                 ->alignment(Alignment::Right),
             Column::make('on_time_count')
-                ->label('Paid On Time')
+                ->label(translate('Paid On Time'))
                 ->toggleable()
                 ->alignment(Alignment::Right),
             Column::make('late_count')
-                ->label('Paid Late')
+                ->label(translate('Paid Late'))
                 ->toggleable()
                 ->alignment(Alignment::Right),
             Column::make('avg_days_to_pay')
-                ->label('Avg. Days to Pay')
+                ->label(translate('Avg. Days to Pay'))
                 ->toggleable()
                 ->alignment(Alignment::Right),
             Column::make('avg_days_late')
-                ->label('Avg. Days Late')
+                ->label(translate('Avg. Days Late'))
                 ->toggleable()
                 ->alignment(Alignment::Right),
             Column::make('on_time_payment_rate')
-                ->label('On Time Rate')
+                ->label(translate('On Time Rate'))
                 ->alignment(Alignment::Right),
         ];
     }

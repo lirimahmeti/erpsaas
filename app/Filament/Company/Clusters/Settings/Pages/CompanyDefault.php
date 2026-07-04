@@ -114,7 +114,7 @@ class CompanyDefault extends Page
 
     protected function getGeneralSection(): Component
     {
-        return Section::make('General')
+        return Section::make(translate('General'))
             ->schema([
                 Select::make('bank_account_id')
                     ->localizeLabel()
