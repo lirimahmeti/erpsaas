@@ -13,7 +13,7 @@
             'hero_text' => 'SOFTIX ERP brings sales, purchasing, accounting, banking, reporting, clients, vendors, and recurring work into one clean workspace built for modern teams.',
             'primary_cta' => 'Start using SOFTIX ERP',
             'secondary_cta' => 'Explore features',
-            'proof' => ['Multilingual by design', 'Financial workflows in one place', 'Built on secure Laravel infrastructure'],
+            'proof' => ['Multilingual by design', 'Financial workflows in one place', 'Secure infrastructure for your data'],
             'panel_title' => 'Live business command center',
             'panel_subtitle' => 'Stay current across cash flow, invoices, bills, and reports without jumping between tools.',
             'panel_stats' => [
@@ -64,7 +64,7 @@
             'hero_text' => 'SOFTIX ERP bashkon shitjet, blerjet, kontabilitetin, bankat, raportet, klientet, furnitoret dhe punet periodike ne nje hapesire te paster per ekipe moderne.',
             'primary_cta' => 'Filloni me SOFTIX ERP',
             'secondary_cta' => 'Shiko veçoritë',
-            'proof' => ['I ndertuar per shume gjuhe', 'Rrjedha financiare ne nje vend', 'Bazuar ne infrastrukture te sigurt Laravel'],
+            'proof' => ['I ndertuar per shume gjuhe', 'Rrjedha financiare ne nje vend', 'Infrastrukture e sigurt per te dhenat tuaja'],
             'panel_title' => 'Qender komande per biznesin',
             'panel_subtitle' => 'Qendroni te perditesuar per cash flow, fatura, pagesa dhe raporte pa kaluar nga nje mjet ne tjetrin.',
             'panel_stats' => [
@@ -119,16 +119,6 @@
 
     $text = array_replace_recursive($copy['en'], $copy[$currentLocale] ?? []);
 
-    if ($currentLocale !== 'en' && ! isset($copy[$currentLocale]) && function_exists('translate')) {
-        $translateCopy = function (array $values) use (&$translateCopy): array {
-            return array_map(function ($value) use (&$translateCopy) {
-                return is_array($value) ? $translateCopy($value) : translate($value);
-            }, $values);
-        };
-
-        $text = $translateCopy($text);
-    }
-
     $text = array_replace_recursive($text, $localized[$currentLocale] ?? []);
     $isRtl = in_array($currentLocale, ['ar'], true);
 @endphp
@@ -168,12 +158,66 @@
 
         a { color: inherit; text-decoration: none; }
         .wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
-        .topbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 0; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 0; position: relative; }
         .brand { display: flex; align-items: center; gap: 12px; color: var(--ink); }
         .brand-mark svg { width: 180px; height: auto; }
         .nav { display: flex; align-items: center; gap: 18px; color: var(--muted); font-weight: 600; font-size: 14px; }
         .nav a:hover { color: var(--primary); }
         .actions { display: flex; align-items: center; gap: 10px; }
+        .mobile-menu { display: none; }
+        .menu-button {
+            align-items: center;
+            border: 1px solid rgba(17, 24, 39, .12);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .76);
+            color: var(--ink);
+            cursor: pointer;
+            font-weight: 800;
+            gap: 8px;
+            min-height: 42px;
+            padding: 0 14px;
+            list-style: none;
+        }
+        .menu-button::-webkit-details-marker { display: none; }
+        .menu-button:after { content: "☰"; font-size: 18px; line-height: 1; }
+        .mobile-menu[open] .menu-button:after { content: "×"; font-size: 22px; }
+        .mobile-panel {
+            position: absolute;
+            top: calc(100% - 12px);
+            left: 0;
+            right: 0;
+            z-index: 20;
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, .94);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, .16);
+            display: grid;
+            gap: 16px;
+            padding: 18px;
+            backdrop-filter: blur(18px);
+        }
+        .mobile-panel .nav,
+        .mobile-panel .actions {
+            width: 100%;
+        }
+        .mobile-panel .nav {
+            display: grid;
+            gap: 8px;
+        }
+        .mobile-panel .nav a {
+            border-radius: 14px;
+            padding: 12px 14px;
+            background: rgba(79, 70, 229, .07);
+        }
+        .mobile-panel .actions {
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+        .mobile-panel label,
+        .mobile-panel .language-select,
+        .mobile-panel .btn {
+            width: 100%;
+        }
         .language-select {
             border: 1px solid rgba(17, 24, 39, .12);
             border-radius: 999px;
@@ -234,18 +278,30 @@
         .footer { color: var(--muted); border-top: 1px solid var(--line); padding: 28px 0 40px; font-size: 14px; }
 
         @media (max-width: 900px) {
-            .topbar { flex-wrap: wrap; }
-            .nav { order: 3; width: 100%; justify-content: center; }
+            .topbar { gap: 16px; }
             .hero, .why { grid-template-columns: 1fr; }
             .feature-grid, .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
 
+        @media (max-width: 760px) {
+            .desktop-nav,
+            .desktop-actions {
+                display: none;
+            }
+            .mobile-menu {
+                display: block;
+            }
+            .menu-button {
+                display: inline-flex;
+            }
+        }
+
         @media (max-width: 640px) {
-            .actions { width: 100%; justify-content: space-between; flex-wrap: wrap; }
-            .language-select, .actions .btn { flex: 1; min-width: 145px; }
+            .wrap { width: min(100% - 24px, 1120px); }
+            .topbar { padding: 16px 0; }
             .hero { padding-top: 42px; }
             .feature-grid, .steps { grid-template-columns: 1fr; }
-            .brand-mark svg { width: 150px; }
+            .brand-mark svg { width: 142px; }
         }
     </style>
 </head>
@@ -255,13 +311,13 @@
             <span class="brand-mark"><x-icons.logo /></span>
         </a>
 
-        <nav class="nav" aria-label="Primary">
+        <nav class="nav desktop-nav" aria-label="Primary">
             <a href="#features">{{ $text['nav_features'] }}</a>
             <a href="#why">{{ $text['nav_why'] }}</a>
             <a href="#start">{{ $text['nav_start'] }}</a>
         </nav>
 
-        <div class="actions">
+        <div class="actions desktop-actions">
             <label>
                 <span style="position:absolute;clip:rect(0,0,0,0);">{{ $text['language'] }}</span>
                 <select class="language-select" onchange="window.location.href = this.value">
@@ -278,6 +334,36 @@
                 <a class="btn primary" href="{{ $registrationUrl }}">{{ $text['register'] }}</a>
             @endif
         </div>
+
+        <details class="mobile-menu">
+            <summary class="menu-button" aria-label="Open navigation">Menu</summary>
+
+            <div class="mobile-panel">
+                <nav class="nav" aria-label="Mobile primary">
+                    <a href="#features">{{ $text['nav_features'] }}</a>
+                    <a href="#why">{{ $text['nav_why'] }}</a>
+                    <a href="#start">{{ $text['nav_start'] }}</a>
+                </nav>
+
+                <div class="actions">
+                    <label>
+                        <span style="position:absolute;clip:rect(0,0,0,0);">{{ $text['language'] }}</span>
+                        <select class="language-select" onchange="window.location.href = this.value">
+                            @foreach ($languages as $locale => $language)
+                                <option value="{{ url($locale === config('app.locale') ? '/' : "/{$locale}") }}" @selected($locale === $currentLocale)>
+                                    {{ $language }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </label>
+
+                    <a class="btn" href="{{ $loginUrl }}">{{ $text['login'] }}</a>
+                    @if ($registrationUrl)
+                        <a class="btn primary" href="{{ $registrationUrl }}">{{ $text['register'] }}</a>
+                    @endif
+                </div>
+            </div>
+        </details>
     </header>
 
     <main>
