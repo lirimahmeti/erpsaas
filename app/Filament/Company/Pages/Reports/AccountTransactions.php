@@ -119,7 +119,7 @@ class AccountTransactions extends BaseReportPage
             ->toArray();
 
         $allAccountsOption = [
-            'All Accounts' => ['all' => 'All Accounts'],
+            translate('All Accounts') => ['all' => translate('All Accounts')],
         ];
 
         return $allAccountsOption + $accounts;
@@ -139,12 +139,12 @@ class AccountTransactions extends BaseReportPage
             ->toArray();
 
         $allEntitiesOption = [
-            'All Payees' => ['all' => 'All Payees'],
+            translate('All Payees') => ['all' => translate('All Payees')],
         ];
 
         return $allEntitiesOption + [
-            'Clients' => $clients,
-            'Vendors' => $vendors,
+            translate('Clients') => $clients,
+            translate('Vendors') => $vendors,
         ];
     }
 
@@ -176,12 +176,12 @@ class AccountTransactions extends BaseReportPage
 
     public function getEmptyStateHeading(): string | Htmlable
     {
-        return 'No Transactions Found';
+        return translate('No Transactions Found');
     }
 
     public function getEmptyStateDescription(): string | Htmlable | null
     {
-        return 'Adjust the account or date range, or start by creating a transaction.';
+        return translate('Adjust the account or date range, or start by creating a transaction.');
     }
 
     public function getEmptyStateIcon(): string

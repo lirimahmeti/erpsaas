@@ -12,8 +12,8 @@ trait HasReportTabs
     public function getTabs(): array
     {
         return [
-            'summary' => 'Summary',
-            'details' => 'Details',
+            'summary' => translate('Summary'),
+            'details' => translate('Details'),
         ];
     }
 

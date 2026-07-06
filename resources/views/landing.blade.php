@@ -328,10 +328,14 @@
                     @endforeach
                 </select>
             </label>
-
-            <a class="btn" href="{{ $loginUrl }}">{{ $text['login'] }}</a>
-            @if ($registrationUrl)
-                <a class="btn primary" href="{{ $registrationUrl }}">{{ $text['register'] }}</a>
+            
+            @if (auth()->check())
+                <a class="btn" href="{{ url(filament()->getUrl()) }}">{{ translate('Go to Dashboard') }}</a>
+            @else
+                <a class="btn" href="{{ $loginUrl }}">{{ $text['login'] }}</a>
+                @if ($registrationUrl)
+                    <a class="btn primary" href="{{ $registrationUrl }}">{{ $text['register'] }}</a>
+                @endif
             @endif
         </div>
 

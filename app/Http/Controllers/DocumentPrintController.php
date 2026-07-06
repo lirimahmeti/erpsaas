@@ -8,7 +8,7 @@ use App\Enums\Setting\Template;
 use App\Models\Accounting\Estimate;
 use App\Models\Accounting\Invoice;
 use App\Models\Accounting\RecurringInvoice;
-use App\Models\Setting\DocumentDefault;
+use App\Services\CompanySettingsService;
 use Illuminate\Http\Request;
 
 class DocumentPrintController extends Controller
@@ -27,13 +27,18 @@ class DocumentPrintController extends Controller
 
         $modelClass = $this->documentModels[$documentType];
         $document = $modelClass::findOrFail($id);
+        $settings = CompanySettingsService::getSettings($document->company_id);
+
+        app()->setLocale($settings['default_language']);
+        locale_set_default($settings['default_language']);
+
         $documentTypeEnum = $document::documentType();
 
         if ($documentTypeEnum === DocumentType::RecurringInvoice) {
             $documentTypeEnum = DocumentType::Invoice;
         }
 
-        $defaults = DocumentDefault::query()
+        $defaults = $document->company->documentDefaults()
             ->type($documentTypeEnum)
             ->first();
 

@@ -49,7 +49,7 @@ class BillOverview extends EnhancedStatsOverviewWidget
                 ->value('avg_days');
 
             $averagePaymentTimeFormatted = Number::format($averagePaymentTime ?? 0, maxPrecision: 1);
-            $averagePaymentTimeSuffix = 'days';
+            $averagePaymentTimeSuffix = translate('days');
 
             $lastMonthPaid = $this->getPageTableQuery()
                 ->whereBetween('date', [
@@ -65,11 +65,11 @@ class BillOverview extends EnhancedStatsOverviewWidget
 
         if ($activeTab === 'paid') {
             return [
-                EnhancedStatsOverviewWidget\EnhancedStat::make('Total To Pay', '-'),
-                EnhancedStatsOverviewWidget\EnhancedStat::make('Due Within 7 Days', '-'),
-                EnhancedStatsOverviewWidget\EnhancedStat::make('Average Payment Time', $averagePaymentTimeFormatted)
+                EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Total To Pay'), '-'),
+                EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Due Within 7 Days'), '-'),
+                EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Average Payment Time'), $averagePaymentTimeFormatted)
                     ->suffix($averagePaymentTimeSuffix),
-                EnhancedStatsOverviewWidget\EnhancedStat::make('Paid Last Month', $lastMonthTotal)
+                EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Paid Last Month'), $lastMonthTotal)
                     ->suffix($lastMonthTotalSuffix),
             ];
         }
@@ -92,14 +92,14 @@ class BillOverview extends EnhancedStatsOverviewWidget
             ->sumMoneyInDefaultCurrency('amount_due');
 
         return [
-            EnhancedStatsOverviewWidget\EnhancedStat::make('Total To Pay', CurrencyConverter::formatCentsToMoney($amountToPay))
+            EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Total To Pay'), CurrencyConverter::formatCentsToMoney($amountToPay))
                 ->suffix(CurrencyAccessor::getDefaultCurrency())
-                ->description('Includes ' . CurrencyConverter::formatCentsToMoney($amountOverdue) . ' overdue'),
-            EnhancedStatsOverviewWidget\EnhancedStat::make('Due Within 7 Days', CurrencyConverter::formatCentsToMoney($amountDueWithin7Days))
+                ->description(translate('Includes') . ' ' . CurrencyConverter::formatCentsToMoney($amountOverdue) . ' ' . translate('overdue')),
+            EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Due Within 7 Days'), CurrencyConverter::formatCentsToMoney($amountDueWithin7Days))
                 ->suffix(CurrencyAccessor::getDefaultCurrency()),
-            EnhancedStatsOverviewWidget\EnhancedStat::make('Average Payment Time', $averagePaymentTimeFormatted)
+            EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Average Payment Time'), $averagePaymentTimeFormatted)
                 ->suffix($averagePaymentTimeSuffix),
-            EnhancedStatsOverviewWidget\EnhancedStat::make('Paid Last Month', $lastMonthTotal)
+            EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Paid Last Month'), $lastMonthTotal)
                 ->suffix($lastMonthTotalSuffix),
         ];
     }

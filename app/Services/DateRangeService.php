@@ -33,19 +33,26 @@ class DateRangeService
         $currentYear = $currentDate->year;
         $fiscalYearStartCurrent = Carbon::parse($this->fiscalYearStartDate);
 
+        $fiscalYear = translate('Fiscal Year');
+        $fiscalQuarter = translate('Fiscal Quarter');
+        $calendarYear = translate('Calendar Year');
+        $calendarQuarter = translate('Calendar Quarter');
+        $month = translate('Month');
+        $custom = translate('Custom');
+
         $options = [
-            'Fiscal Year' => [],
-            'Fiscal Quarter' => [],
-            'Calendar Year' => [],
-            'Calendar Quarter' => [],
-            'Month' => [],
-            'Custom' => [],
+            $fiscalYear => [],
+            $fiscalQuarter => [],
+            $calendarYear => [],
+            $calendarQuarter => [],
+            $month => [],
+            $custom => [],
         ];
 
         $period = CarbonPeriod::create($earliestDate, '1 month', $currentDate->endOfMonth());
 
         foreach ($period as $date) {
-            $options['Fiscal Year']['FY-' . $date->year] = $date->year;
+            $options[$fiscalYear]['FY-' . $date->year] = $date->year;
 
             $fiscalYearStart = $fiscalYearStartCurrent->copy()->subYears($currentYear - $date->year);
 
@@ -55,22 +62,22 @@ class DateRangeService
                 $quarterEnd = $quarterStart->copy()->addMonths(3)->subDay();
 
                 if ($quarterStart->lessThanOrEqualTo($currentDate) && $quarterEnd->greaterThanOrEqualTo($earliestDate)) {
-                    $options['Fiscal Quarter']['FQ-' . $quarterNumber . '-' . $date->year] = 'Q' . $quarterNumber . ' ' . $date->year;
+                    $options[$fiscalQuarter]['FQ-' . $quarterNumber . '-' . $date->year] = 'Q' . $quarterNumber . ' ' . $date->year;
                 }
             }
 
-            $options['Calendar Year']['Y-' . $date->year] = $date->year;
+            $options[$calendarYear]['Y-' . $date->year] = $date->year;
             $quarterKey = 'Q-' . $date->quarter . '-' . $date->year;
-            $options['Calendar Quarter'][$quarterKey] = 'Q' . $date->quarter . ' ' . $date->year;
-            $options['Month']['M-' . $date->format('Y-m')] = $date->format('F Y');
-            $options['Custom']['Custom'] = 'Custom';
+            $options[$calendarQuarter][$quarterKey] = 'Q' . $date->quarter . ' ' . $date->year;
+            $options[$month]['M-' . $date->format('Y-m')] = $date->format('F Y');
+            $options[$custom]['Custom'] = translate('Custom');
         }
 
-        $options['Fiscal Year'] = array_reverse($options['Fiscal Year'], true);
-        $options['Fiscal Quarter'] = array_reverse($options['Fiscal Quarter'], true);
-        $options['Calendar Year'] = array_reverse($options['Calendar Year'], true);
-        $options['Calendar Quarter'] = array_reverse($options['Calendar Quarter'], true);
-        $options['Month'] = array_reverse($options['Month'], true);
+        $options[$fiscalYear] = array_reverse($options[$fiscalYear], true);
+        $options[$fiscalQuarter] = array_reverse($options[$fiscalQuarter], true);
+        $options[$calendarYear] = array_reverse($options[$calendarYear], true);
+        $options[$calendarQuarter] = array_reverse($options[$calendarQuarter], true);
+        $options[$month] = array_reverse($options[$month], true);
 
         return $options;
     }
@@ -95,7 +102,7 @@ class DateRangeService
             }
         }
 
-        return 'Custom'; // Return "Custom" if no matching range is found
+        return 'Custom'; // Return the stored custom range key.
     }
 
     private function getExpectedDateRange(string $type, string $key): array
@@ -103,28 +110,28 @@ class DateRangeService
         $currentYear = company_today()->year;
 
         switch ($type) {
-            case 'Fiscal Year':
+            case translate('Fiscal Year'):
                 $year = (int) substr($key, 3);
                 $start = Carbon::parse($this->fiscalYearStartDate)->subYears($currentYear - $year)->startOfDay();
                 $end = Carbon::parse($this->fiscalYearEndDate)->subYears($currentYear - $year)->startOfDay();
 
                 break;
 
-            case 'Fiscal Quarter':
+            case translate('Fiscal Quarter'):
                 [$quarter, $year] = explode('-', substr($key, 3));
                 $start = Carbon::parse($this->fiscalYearStartDate)->subYears($currentYear - $year)->addMonths(($quarter - 1) * 3)->startOfDay();
                 $end = $start->copy()->addMonths(3)->subDay()->startOfDay();
 
                 break;
 
-            case 'Calendar Year':
+            case translate('Calendar Year'):
                 $year = (int) substr($key, 2);
                 $start = Carbon::createFromDate($year)->startOfYear()->startOfDay();
                 $end = Carbon::createFromDate($year)->endOfYear()->startOfDay();
 
                 break;
 
-            case 'Calendar Quarter':
+            case translate('Calendar Quarter'):
                 [$quarter, $year] = explode('-', substr($key, 2));
                 $month = ($quarter - 1) * 3 + 1;
                 $start = Carbon::createFromDate($year, $month, 1)->startOfDay();
@@ -132,7 +139,7 @@ class DateRangeService
 
                 break;
 
-            case 'Month':
+            case translate('Month'):
                 $yearMonth = substr($key, 2);
                 $start = Carbon::parse($yearMonth)->startOfMonth()->startOfDay();
                 $end = Carbon::parse($yearMonth)->endOfMonth()->startOfDay();

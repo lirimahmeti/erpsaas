@@ -39,7 +39,9 @@ class ChildrenRelationManager extends RelationManager
                     ->searchable()
                     ->preload()
                     ->nullable(),
-                Forms\Components\MarkdownEditor::make('description')->required(),
+                Forms\Components\MarkdownEditor::make('description')
+                    ->localizeLabel()
+                    ->required(),
             ]);
     }
 

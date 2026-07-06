@@ -91,6 +91,7 @@ class RecordPayments extends ListRecords
     {
         return [
             Actions\Action::make('processPayments')
+                ->label(translate('Process payments'))
                 ->color('primary')
                 ->requiresConfirmation()
                 ->modalHeading(translate('Confirm payments'))

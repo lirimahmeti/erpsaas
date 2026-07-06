@@ -22,14 +22,14 @@ class ListDepartments extends ListRecords
     public function getTabs(): array
     {
         return [
-            'all' => Tab::make('All')
+            'all' => Tab::make(translate('All'))
                 ->badge(Department::query()->count()),
-            'main' => Tab::make('Main')
+            'main' => Tab::make(translate('Main'))
                 ->badge(Department::query()->whereParentId(null)->count())
                 ->modifyQueryUsing(static function ($query) {
                     $query->whereParentId(null);
                 }),
-            'children' => Tab::make('Children')
+            'children' => Tab::make(translate('Children'))
                 ->badge(Department::query()->whereNotNull('parent_id')->count())
                 ->modifyQueryUsing(static function ($query) {
                     $query->whereNotNull('parent_id');

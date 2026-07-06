@@ -3,7 +3,7 @@
     fill="currentColor"
     role="img"
     aria-label="SOFTIX ERP"
-    class="h-5/6 text-gray-800 dark:text-gray-100"
+    class="h-full text-gray-800 dark:text-gray-100"
 >
     <text
         x="0"
@@ -14,7 +14,7 @@
         letter-spacing="3"
     >SOFTIX</text>
     <text
-        x="130"
+        x="135"
         y="35"
         font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
         font-size="34"

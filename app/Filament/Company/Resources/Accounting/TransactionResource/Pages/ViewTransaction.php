@@ -46,10 +46,10 @@ class ViewTransaction extends ViewRecord
                 ->hidden(static fn (Transaction $record): bool => ! $record->transactionable_id)
                 ->label(static function (Transaction $record) {
                     if (! $record->transactionable_type) {
-                        return 'View document';
+                        return translate('View document');
                     }
 
-                    return 'View ' . get_model_label($record->transactionable_type);
+                    return translate('View') . ' ' . translate(get_model_label($record->transactionable_type));
                 })
                 ->url(static function (Transaction $record) {
                     return match ($record->transactionable_type) {
@@ -61,7 +61,7 @@ class ViewTransaction extends ViewRecord
             Actions\ActionGroup::make([
                 Actions\ActionGroup::make([
                     Actions\Action::make('markAsReviewed')
-                        ->label(static fn (Transaction $record) => $record->reviewed ? 'Mark as unreviewed' : 'Mark as reviewed')
+                        ->label(static fn (Transaction $record) => $record->reviewed ? translate('Mark as unreviewed') : translate('Mark as reviewed'))
                         ->icon(static fn (Transaction $record) => $record->reviewed ? 'heroicon-s-check-circle' : 'heroicon-o-check-circle')
                         ->hidden(fn (Transaction $record): bool => $record->isUncategorized())
                         ->action(fn (Transaction $record) => $record->update(['reviewed' => ! $record->reviewed])),
@@ -69,7 +69,7 @@ class ViewTransaction extends ViewRecord
                         ->excludeAttributes(['created_by', 'updated_by', 'created_at', 'updated_at'])
                         ->modal(false)
                         ->beforeReplicaSaved(static function (Transaction $replica) {
-                            $replica->description = '(Copy of) ' . $replica->description;
+                            $replica->description = translate('(Copy of) :description', ['description' => $replica->description]);
                         })
                         ->hidden(static fn (Transaction $transaction) => $transaction->transactionable_id)
                         ->after(static function (Transaction $original, Transaction $replica) {
@@ -143,7 +143,7 @@ class ViewTransaction extends ViewRecord
                         TextEntry::make('reviewed')
                             ->label(translate('Status'))
                             ->badge()
-                            ->formatStateUsing(static fn (bool $state): string => $state ? 'Reviewed' : 'Not Reviewed')
+                            ->formatStateUsing(static fn (bool $state): string => $state ? translate('Reviewed') : translate('Not Reviewed'))
                             ->color(static fn (bool $state): string => $state ? 'success' : 'warning'),
                         TextEntry::make('notes')
                             ->label(translate('Notes'))

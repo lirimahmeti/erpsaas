@@ -56,8 +56,10 @@ class DocumentHeaderSection extends Section
                 ]),
                 Group::make([
                     TextInput::make('header')
+                        ->localizeLabel()
                         ->default(fn () => $this->getDefaultHeader()),
                     TextInput::make('subheader')
+                        ->localizeLabel()
                         ->default(fn () => $this->getDefaultSubheader()),
                 ])->grow(true),
             ])->from('md'),

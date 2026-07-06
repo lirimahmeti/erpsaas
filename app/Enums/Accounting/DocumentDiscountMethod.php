@@ -15,8 +15,8 @@ enum DocumentDiscountMethod: string implements HasLabel
     public function getLabel(): string
     {
         return match ($this) {
-            self::PerLineItem => 'Per Line Item',
-            self::PerDocument => 'Per Document',
+            self::PerLineItem => translate('Per Line Item'),
+            self::PerDocument => translate('Per Document'),
         };
     }
 

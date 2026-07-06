@@ -21,6 +21,7 @@ class ListBills extends ListRecords
     {
         return [
             Actions\Action::make('payBills')
+                ->label(translate('Pay bills'))
                 ->outlined()
                 ->url(PayBills::getUrl()),
             Actions\CreateAction::make(),

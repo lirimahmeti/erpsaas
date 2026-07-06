@@ -15,20 +15,26 @@ class VendorExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            ExportColumn::make('name'),
+            ExportColumn::make('name')
+                ->label(translate('Name')),
             ExportColumn::make('type')
+                ->label(translate('Type'))
                 ->enum(),
             ExportColumn::make('contractor_type')
+                ->label(translate('Contractor type'))
                 ->enum(),
-            ExportColumn::make('account_number'),
+            ExportColumn::make('account_number')
+                ->label(translate('Account number')),
             ExportColumn::make('contact.full_name')
                 ->label(translate('Primary contact')),
             ExportColumn::make('contact.email')
                 ->label(translate('Email')),
             ExportColumn::make('contact.first_available_phone')
                 ->label(translate('Phone')),
-            ExportColumn::make('currency_code'),
+            ExportColumn::make('currency_code')
+                ->label(translate('Currency code')),
             ExportColumn::make('balance')
+                ->label(translate('Balance'))
                 ->state(function (Vendor $record) {
                     return $record->bills()
                         ->unpaid()
@@ -37,6 +43,7 @@ class VendorExporter extends Exporter
                 })
                 ->money(),
             ExportColumn::make('overdue_amount')
+                ->label(translate('Overdue amount'))
                 ->state(function (Vendor $record) {
                     return $record->bills()
                         ->where('status', BillStatus::Overdue)
@@ -66,18 +73,26 @@ class VendorExporter extends Exporter
                 ->label(translate('EIN'))
                 ->enabledByDefault(false),
             ExportColumn::make('website')
+                ->label(translate('Website'))
                 ->enabledByDefault(false),
             ExportColumn::make('notes')
+                ->label(translate('Notes'))
                 ->enabledByDefault(false),
         ];
     }
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Your vendor export has completed and ' . number_format($export->successful_rows) . ' ' . str('row')->plural($export->successful_rows) . ' exported.';
+        $body = translate('Your vendor export has completed and :count :rows exported.', [
+            'count' => number_format($export->successful_rows),
+            'rows' => translate(str('row')->plural($export->successful_rows)->toString()),
+        ]);
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to export.';
+            $body .= ' '.translate(':count :rows failed to export.', [
+                'count' => number_format($failedRowsCount),
+                'rows' => translate(str('row')->plural($failedRowsCount)->toString()),
+            ]);
         }
 
         return $body;

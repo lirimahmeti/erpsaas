@@ -49,7 +49,7 @@ class ListInvoices extends ListRecords
                         $clientName = $recurringInvoice?->client?->name;
 
                         if (! $clientName) {
-                            return 'You are currently viewing invoices created from a recurring invoice';
+                            return translate('You are currently viewing invoices created from a recurring invoice');
                         }
 
                         $recurringInvoiceUrl = ViewRecurringInvoice::getUrl([
@@ -58,11 +58,11 @@ class ListInvoices extends ListRecords
 
                         $link = Blade::render('filament::components.link', [
                             'href' => $recurringInvoiceUrl,
-                            'slot' => 'a recurring invoice for ' . $clientName,
+                            'slot' => translate('a recurring invoice for') . ' ' . $clientName,
                         ]);
 
                         return new HtmlString(
-                            "You are currently viewing invoices created from {$link}"
+                            translate('You are currently viewing invoices created from') . " {$link}"
                         );
                     })
                     ->visible(fn () => ! empty($this->recurringInvoice))
@@ -80,6 +80,7 @@ class ListInvoices extends ListRecords
     {
         return [
             Actions\Action::make('recordPayments')
+                ->label(translate('Record payments'))
                 ->outlined()
                 ->url(RecordPayments::getUrl()),
             Actions\CreateAction::make(),

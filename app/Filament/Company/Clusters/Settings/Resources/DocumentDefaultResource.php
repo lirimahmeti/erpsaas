@@ -28,6 +28,16 @@ class DocumentDefaultResource extends Resource
 
     protected static ?string $modelLabel = 'document template';
 
+    public static function getModelLabel(): string
+    {
+        return translate('Document Template');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return translate('Document Templates');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -45,13 +55,16 @@ class DocumentDefaultResource extends Resource
         return Forms\Components\Section::make(translate('General'))
             ->schema([
                 Forms\Components\TextInput::make('number_prefix')
+                    ->label(translate('Number Prefix'))
                     ->localizeLabel()
                     ->nullable(),
                 Forms\Components\Select::make('payment_terms')
+                    ->label(translate('Payment Terms'))
                     ->softRequired()
                     ->localizeLabel()
                     ->options(PaymentTerms::class),
                 Forms\Components\Select::make('discount_method')
+                    ->label(translate('Discount Method'))
                     ->softRequired()
                     ->options(DocumentDiscountMethod::class),
             ])->columns();

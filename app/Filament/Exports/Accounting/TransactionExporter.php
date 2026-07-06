@@ -15,21 +15,27 @@ class TransactionExporter extends Exporter
     {
         return [
             ExportColumn::make('posted_at')
+                ->label(translate('Posted at'))
                 ->date(),
-            ExportColumn::make('description'),
+            ExportColumn::make('description')
+                ->label(translate('Description')),
             ExportColumn::make('amount')
+                ->label(translate('Amount'))
                 ->money(),
             ExportColumn::make('account.name')
                 ->label(translate('Category')),
             ExportColumn::make('bankAccount.account.name')
                 ->label(translate('Account')),
             ExportColumn::make('type')
+                ->label(translate('Type'))
                 ->enum(),
             ExportColumn::make('payeeable.name')
                 ->label(translate('Payee')),
             ExportColumn::make('payment_method')
+                ->label(translate('Payment method'))
                 ->enum(),
             ExportColumn::make('notes')
+                ->label(translate('Notes'))
                 ->enabledByDefault(false),
             ExportColumn::make('transactionable_type')
                 ->label(translate('Source type'))
@@ -44,18 +50,26 @@ class TransactionExporter extends Exporter
                 })
                 ->enabledByDefault(false),
             ExportColumn::make('is_payment')
+                ->label(translate('Payment'))
                 ->enabledByDefault(false),
             ExportColumn::make('reviewed')
+                ->label(translate('Reviewed'))
                 ->enabledByDefault(false),
         ];
     }
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Your transaction export has completed and ' . number_format($export->successful_rows) . ' ' . str('row')->plural($export->successful_rows) . ' exported.';
+        $body = translate('Your transaction export has completed and :count :rows exported.', [
+            'count' => number_format($export->successful_rows),
+            'rows' => translate(str('row')->plural($export->successful_rows)->toString()),
+        ]);
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to export.';
+            $body .= ' '.translate(':count :rows failed to export.', [
+                'count' => number_format($failedRowsCount),
+                'rows' => translate(str('row')->plural($failedRowsCount)->toString()),
+            ]);
         }
 
         return $body;

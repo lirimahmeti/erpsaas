@@ -35,6 +35,11 @@ readonly class DocumentColumnLabelDTO
 
     public static function getDefaultLabels(): self
     {
-        return new self;
+        return new self(
+            items: translate('Items'),
+            units: translate('Quantity'),
+            price: translate('Price'),
+            amount: translate('Amount'),
+        );
     }
 }

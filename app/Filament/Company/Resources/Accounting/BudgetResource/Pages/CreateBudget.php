@@ -102,11 +102,12 @@ class CreateBudget extends CreateRecord
     public function getSteps(): array
     {
         return [
-            Step::make('General Information')
+            Step::make(translate('General Information'))
                 ->icon('heroicon-o-document-text')
                 ->columns(2)
                 ->schema([
                     Forms\Components\TextInput::make('name')
+                        ->localizeLabel()
                         ->required()
                         ->maxLength(255),
                     Forms\Components\Select::make('interval_type')
@@ -116,10 +117,12 @@ class CreateBudget extends CreateRecord
                         ->required()
                         ->live(),
                     Forms\Components\DatePicker::make('start_date')
+                        ->localizeLabel()
                         ->required()
                         ->default(company_today()->startOfYear())
                         ->live(),
                     Forms\Components\DatePicker::make('end_date')
+                        ->localizeLabel()
                         ->required()
                         ->default(company_today()->endOfYear())
                         ->live()
@@ -133,7 +136,7 @@ class CreateBudget extends CreateRecord
                         ->maxDate(fn (Forms\Get $get) => Carbon::parse($get('start_date'))->endOfYear()),
                 ]),
 
-            Step::make('Budget Setup & Settings')
+            Step::make(translate('Budget Setup & Settings'))
                 ->icon('heroicon-o-cog-6-tooth')
                 ->schema([
                     // Prefill configuration
@@ -260,9 +263,14 @@ class CreateBudget extends CreateRecord
 
                                             // Format the amount for display
                                             $formattedAmount = CurrencyConverter::formatCentsToMoney($netMovement);
-                                            $descriptions[$accountId] = "{$formattedAmount} in {$fiscalYear}";
+                                            $descriptions[$accountId] = translate(':amount in :year', [
+                                                'amount' => $formattedAmount,
+                                                'year' => $fiscalYear,
+                                            ]);
                                         } else {
-                                            $descriptions[$accountId] = "No transactions in {$fiscalYear}";
+                                            $descriptions[$accountId] = translate('No transactions in :year', [
+                                                'year' => $fiscalYear,
+                                            ]);
                                         }
                                     }
 

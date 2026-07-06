@@ -62,12 +62,15 @@ abstract class BaseAgingReportPage extends BaseReportPage
             $end = $i * $daysPerPeriod;
 
             $columns[] = Column::make("period_{$i}")
-                ->label("{$start} to {$end}")
+                ->label(translate(':start to :end', [
+                    'start' => $start,
+                    'end' => $end,
+                ]))
                 ->alignment(Alignment::Right);
         }
 
         $columns[] = Column::make('over_periods')
-            ->label('Over ' . (($numberOfPeriods - 1) * $daysPerPeriod))
+            ->label(translate('Over') . ' ' . (($numberOfPeriods - 1) * $daysPerPeriod))
             ->alignment(Alignment::Right);
 
         $columns[] = Column::make('total')

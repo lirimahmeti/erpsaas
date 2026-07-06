@@ -142,7 +142,7 @@ class AccountChart extends Page
             ->label(translate('Code'))
             ->required()
             ->hiddenOn('edit')
-            ->validationAttribute('account code')
+            ->validationAttribute(translate('account code'))
             ->unique(table: Account::class, column: 'code', ignoreRecord: true)
             ->validateAccountCode(static fn (Get $get) => $get('subtype_id'));
     }
@@ -151,6 +151,7 @@ class AccountChart extends Page
     {
         return [
             Checkbox::make('is_bank_account')
+                ->label(translate('Bank account'))
                 ->live()
                 ->visible(function (Get $get, string $operation) {
                     if ($operation === 'edit') {
@@ -243,7 +244,7 @@ class AccountChart extends Page
                             return $rule->where('company_id', $companyId)->where('number', $state);
                         })
                         ->maxLength(20)
-                        ->validationAttribute('account number'),
+                        ->validationAttribute(translate('account number')),
                 ])
                 ->visible(static function (Get $get, ?Account $record, string $operation) {
                     if ($operation === 'create') {
@@ -273,7 +274,7 @@ class AccountChart extends Page
             ->required(false)
             ->requiredIfAccepted('is_bank_account')
             ->validationMessages([
-                'required_if_accepted' => 'The currency is required for bank accounts.',
+                'required_if_accepted' => translate('The currency is required for bank accounts.'),
             ])
             ->visible(function (Get $get): bool {
                 return filled($get('subtype_id')) && AccountSubtype::find($get('subtype_id'))->multi_currency;

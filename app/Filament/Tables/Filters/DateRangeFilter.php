@@ -13,9 +13,9 @@ use Illuminate\Support\Str;
 
 class DateRangeFilter extends Filter
 {
-    protected string $fromLabel = 'From';
+    protected string $fromLabel = '';
 
-    protected string $untilLabel = 'Until';
+    protected string $untilLabel = '';
 
     protected ?string $indicatorLabel = null;
 
@@ -30,6 +30,9 @@ class DateRangeFilter extends Filter
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->fromLabel = translate('From');
+        $this->untilLabel = translate('Until');
 
         $this->form([
             DatePicker::make('from')
@@ -139,7 +142,7 @@ class DateRangeFilter extends Filter
 
     public function getIndicatorLabel(): string
     {
-        return $this->indicatorLabel ?? Str::headline($this->getName());
+        return $this->indicatorLabel ?? translate(Str::headline($this->getName()));
     }
 
     public function defaultFromDate(string $date): static

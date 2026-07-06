@@ -133,7 +133,7 @@ class EstimateResource extends Resource
                                                 ->mapWithKeys(function (PaymentTerms $paymentTerm) {
                                                     return [$paymentTerm->value => $paymentTerm->getLabel()];
                                                 })
-                                                ->put('custom', 'Custom')
+                                                ->put('custom', translate('Custom'))
                                                 ->toArray();
                                         })
                                         ->selectablePlaceholder(false)
@@ -219,9 +219,9 @@ class EstimateResource extends Resource
                                 ];
 
                                 if ($hasDiscounts) {
-                                    $headers[] = Header::make('Adjustments')->width('30%');
+                                    $headers[] = Header::make(translate('Adjustments'))->width('30%');
                                 } else {
-                                    $headers[] = Header::make('Taxes')->width('30%');
+                                    $headers[] = Header::make(translate('Taxes'))->width('30%');
                                 }
 
                                 $headers[] = Header::make($settings->resolveColumnLabel('amount_name', 'Amount'))

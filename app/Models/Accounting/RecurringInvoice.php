@@ -138,17 +138,17 @@ class RecurringInvoice extends Document
 
     public function documentNumber(): ?string
     {
-        return 'Auto-generated';
+        return translate('Auto-generated');
     }
 
     public function documentDate(): ?string
     {
-        return $this->calculateNextDate()?->toDefaultDateFormat() ?? 'Auto-generated';
+        return $this->calculateNextDate()?->toDefaultDateFormat() ?? translate('Auto-generated');
     }
 
     public function dueDate(): ?string
     {
-        return $this->calculateNextDueDate()?->toDefaultDateFormat() ?? 'Auto-generated';
+        return $this->calculateNextDueDate()?->toDefaultDateFormat() ?? translate('Auto-generated');
     }
 
     public function referenceNumber(): ?string

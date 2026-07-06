@@ -27,6 +27,11 @@ class PaymentsRelationManager extends RelationManager
 
     protected static ?string $modelLabel = 'Payment';
 
+    public static function getModelLabel(): string
+    {
+        return translate(static::$modelLabel);
+    }
+
     protected static bool $isLazy = false;
 
     protected $listeners = [
@@ -97,7 +102,7 @@ class PaymentsRelationManager extends RelationManager
                                 $amount = CurrencyConverter::convertToCents($state, 'USD');
 
                                 if ($amount <= 0) {
-                                    return 'Please enter a valid positive amount';
+                                    return translate('Please enter a valid positive amount');
                                 }
 
                                 $currentPaymentAmount = $record?->amount ?? 0;
@@ -109,15 +114,15 @@ class PaymentsRelationManager extends RelationManager
                                 }
 
                                 return match (true) {
-                                    $newAmountDue > 0 => 'Amount due after payment will be ' . CurrencyConverter::formatCentsToMoney($newAmountDue, $invoiceCurrency),
-                                    $newAmountDue === 0 => 'Invoice will be fully paid',
-                                    default => 'Invoice will be overpaid by ' . CurrencyConverter::formatCentsToMoney(abs($newAmountDue), $invoiceCurrency),
+                                    $newAmountDue > 0 => translate('Amount due after payment will be') . ' ' . CurrencyConverter::formatCentsToMoney($newAmountDue, $invoiceCurrency),
+                                    $newAmountDue === 0 => translate('Invoice will be fully paid'),
+                                    default => translate('Invoice will be overpaid by') . ' ' . CurrencyConverter::formatCentsToMoney(abs($newAmountDue), $invoiceCurrency),
                                 };
                             })
                             ->rules([
                                 static fn (): Closure => static function (string $attribute, $value, Closure $fail) {
                                     if (! CurrencyConverter::isValidAmount($value, 'USD')) {
-                                        $fail('Please enter a valid amount');
+                                        $fail(translate('Please enter a valid amount'));
                                     }
                                 },
                             ]),
@@ -230,7 +235,7 @@ class PaymentsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->label(fn () => $this->getOwnerRecord()->status === InvoiceStatus::Overpaid ? 'Refund Overpayment' : 'Record Payment')
+                    ->label(fn () => $this->getOwnerRecord()->status === InvoiceStatus::Overpaid ? translate('Refund Overpayment') : translate('Record Payment'))
                     ->modalHeading(fn (Tables\Actions\CreateAction $action) => $action->getLabel())
                     ->slideOver()
                     ->modalWidth(MaxWidth::TwoExtraLarge)

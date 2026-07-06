@@ -62,8 +62,8 @@ class TrialBalance extends BaseReportPage
                 Select::make('reportType')
                     ->label(translate('Report type'))
                     ->options([
-                        'standard' => 'Standard',
-                        'postClosing' => 'Post-Closing',
+                        'standard' => translate('Standard'),
+                        'postClosing' => translate('Post-Closing'),
                     ])
                     ->selectablePlaceholder(false),
                 DateRangeSelect::make('dateRange')

@@ -55,10 +55,13 @@ class ClientResource extends Resource
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('account_number')
                                     ->maxLength(255)
+                                    ->label(translate('Account number'))
                                     ->columnStart(1),
                                 Forms\Components\TextInput::make('website')
-                                    ->maxLength(255),
+                                    ->maxLength(255)
+                                    ->label(translate('Website')),
                                 Forms\Components\Textarea::make('notes')
+                                    ->label(translate('Notes'))
                                     ->columnSpanFull(),
                             ]),
                         CustomSection::make(translate('Primary Contact'))
@@ -67,11 +70,13 @@ class ClientResource extends Resource
                             ->saveRelationshipsBeforeChildrenUsing(null)
                             ->dehydrated(true)
                             ->contained(false)
+                            ->label(translate('Primary Contact'))
                             ->schema([
                                 Forms\Components\Hidden::make('is_primary')
+                                    ->label(translate('Is primary'))
                                     ->default(true),
                                 Forms\Components\TextInput::make('first_name')
-                                    ->label(translate('First name'))
+                                    ->label(translate('Name'))
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('last_name')
                                     ->label(translate('Last name'))
@@ -83,6 +88,7 @@ class ClientResource extends Resource
                                     ->maxLength(255),
                                 PhoneBuilder::make('phones')
                                     ->hiddenLabel()
+                                    ->label(translate('Phones'))
                                     ->blockLabels(false)
                                     ->default([
                                         ['type' => 'primary'],
@@ -122,6 +128,7 @@ class ClientResource extends Resource
                             ])->columns(),
                         Forms\Components\Repeater::make('secondaryContacts')
                             ->relationship()
+                            ->label(translate('Secondary Contacts'))
                             ->saveRelationshipsUsing(null)
                             ->saveRelationshipsBeforeChildrenUsing(null)
                             ->dehydrated(true)
@@ -134,7 +141,7 @@ class ClientResource extends Resource
                             ->maxItems(3)
                             ->itemLabel(function (Forms\Components\Repeater $component, array $state): ?string {
                                 if ($component->getItemsCount() === 1) {
-                                    return 'Secondary Contact';
+                                    return translate('Secondary Contact');
                                 }
 
                                 $firstName = $state['first_name'] ?? null;
@@ -148,12 +155,12 @@ class ClientResource extends Resource
                                     return $firstName;
                                 }
 
-                                return 'Secondary Contact';
+                                return translate('Secondary Contact');
                             })
                             ->addActionLabel(translate('Add Contact'))
                             ->schema([
                                 Forms\Components\TextInput::make('first_name')
-                                    ->label(translate('First name'))
+                                    ->label(translate('Name'))
                                     ->live(onBlur: true)
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('last_name')
@@ -266,6 +273,7 @@ class ClientResource extends Resource
             ->columns([
                 Columns::id(),
                 Tables\Columns\TextColumn::make('name')
+                    ->label(translate('Client name'))
                     ->searchable()
                     ->sortable()
                     ->description(static fn (Client $client) => $client->primaryContact?->full_name),

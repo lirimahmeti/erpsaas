@@ -195,7 +195,7 @@ class DocumentDefault extends Model
             return $custom;
         }
 
-        return $this->getLabelOptionFor($column, $option) ?? $default;
+        return $this->getLabelOptionFor($column, $option) ?? translate($default);
     }
 
     protected static function newFactory(): Factory

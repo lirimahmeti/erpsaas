@@ -362,11 +362,11 @@ class MacroServiceProvider extends ServiceProvider
                 $date = Carbon::parse($state)->shiftTimezone($timezone);
 
                 if ($date->isToday()) {
-                    return 'Today';
+                    return translate('Today');
                 } elseif ($date->isTomorrow()) {
-                    return 'Tomorrow';
+                    return translate('Tomorrow');
                 } elseif ($date->isYesterday()) {
-                    return 'Yesterday';
+                    return translate('Yesterday');
                 }
 
                 return $date->diffForHumans([
@@ -393,11 +393,11 @@ class MacroServiceProvider extends ServiceProvider
                 $date = Carbon::parse($state)->shiftTimezone($timezone);
 
                 if ($date->isToday()) {
-                    return 'Today';
+                    return translate('Today');
                 } elseif ($date->isTomorrow()) {
-                    return 'Tomorrow';
+                    return translate('Tomorrow');
                 } elseif ($date->isYesterday()) {
-                    return 'Yesterday';
+                    return translate('Yesterday');
                 }
 
                 return $date->diffForHumans([

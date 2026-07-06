@@ -52,17 +52,17 @@ class InvoiceResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return translate('invoice');
+        return translate('Client Invoice');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return translate('invoices');
+        return translate('Client Invoices');
     }
 
     public static function getNavigationLabel(): string
     {
-        return translate('Invoices');
+        return translate('Client Invoices');
     }
 
     public static function form(Form $form): Form
@@ -137,7 +137,7 @@ class InvoiceResource extends Resource
                                                 ->mapWithKeys(function (PaymentTerms $paymentTerm) {
                                                     return [$paymentTerm->value => $paymentTerm->getLabel()];
                                                 })
-                                                ->put('custom', 'Custom')
+                                                ->put('custom', translate('Custom'))
                                                 ->toArray();
                                         })
                                         ->selectablePlaceholder(false)
@@ -223,9 +223,9 @@ class InvoiceResource extends Resource
                                 ];
 
                                 if ($hasDiscounts) {
-                                    $headers[] = Header::make('Adjustments')->width('30%');
+                                    $headers[] = Header::make(translate('Adjustments'))->width('30%');
                                 } else {
-                                    $headers[] = Header::make('Taxes')->width('30%');
+                                    $headers[] = Header::make(translate('Taxes'))->width('30%');
                                 }
 
                                 $headers[] = Header::make($settings->resolveColumnLabel('amount_name', 'Amount'))

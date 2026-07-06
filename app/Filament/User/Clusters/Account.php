@@ -13,6 +13,16 @@ class Account extends Cluster
 
     protected static ?string $clusterBreadcrumb = 'My Account';
 
+    public static function getNavigationLabel(): string
+    {
+        return translate(static::$navigationLabel);
+    }
+
+    public static function getClusterBreadcrumb(): string
+    {
+        return translate(static::$clusterBreadcrumb);
+    }
+
     public static function getNavigationUrl(): string
     {
         return static::getUrl(panel: 'user');

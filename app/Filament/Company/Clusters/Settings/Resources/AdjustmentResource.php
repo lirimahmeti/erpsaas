@@ -26,14 +26,25 @@ class AdjustmentResource extends Resource
 
     protected static ?string $cluster = Settings::class;
 
+    public static function getModelLabel(): string
+    {
+        return translate('Adjustment');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return translate('Adjustments');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make(translate('General'))
+                Forms\Components\Section::make(translate('General Information'))
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->autofocus()
+                            ->label(translate('Name'))
                             ->required()
                             ->maxLength(255),
                         Forms\Components\Textarea::make('description')
@@ -43,12 +54,14 @@ class AdjustmentResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('category')
                             ->localizeLabel()
+                            ->label(translate('Category of adjustment'))
                             ->options(AdjustmentCategory::class)
                             ->default(AdjustmentCategory::Tax)
                             ->live()
                             ->required(),
                         Forms\Components\Select::make('type')
                             ->localizeLabel()
+                            ->label(translate('Type'))
                             ->options(AdjustmentType::class)
                             ->default(AdjustmentType::Sales)
                             ->live()
@@ -97,12 +110,17 @@ class AdjustmentResource extends Resource
                     ->label(translate('Name'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
+                    ->label(translate('Status'))
+                    ->formatStateUsing(fn (AdjustmentStatus $state) => translate($state->name))
                     ->badge(),
                 Tables\Columns\TextColumn::make('category')
+                    ->label(translate('Category'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type')
+                    ->label(translate('Type'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('rate')
+                    ->label(translate('Rate'))
                     ->localizeLabel()
                     ->rate(static fn (Adjustment $record) => $record->computation->value)
                     ->searchable()
@@ -113,10 +131,12 @@ class AdjustmentResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('start_date')
+                    ->label(translate('Start Date'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('end_date')
+                    ->label(translate('End Date'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -130,7 +150,7 @@ class AdjustmentResource extends Resource
                         collect(AdjustmentStatus::cases())
                             ->mapWithKeys(fn (AdjustmentStatus $status) => [$status->value => $status->getLabel()])
                             ->merge([
-                                'unarchived' => 'Unarchived',
+                                'unarchived' => translate('Unarchived'),
                             ])
                             ->toArray()
                     )
@@ -153,7 +173,7 @@ class AdjustmentResource extends Resource
                             if ($state['value'] === 'unarchived') {
                                 $indicator = $label;
                             } else {
-                                $indicator = Indicator::make("{$indicator}: {$label}");
+                                $indicator = Indicator::make("{$indicator}: ".translate($label));
                             }
                         }
 
@@ -179,7 +199,7 @@ class AdjustmentResource extends Resource
                     ->native(false)
                     ->options(AdjustmentType::class),
                 Tables\Filters\SelectFilter::make('computation')
-                    ->label(translate('Computation'))
+                    ->label(translate('Computation Method'))
                     ->native(false)
                     ->options(AdjustmentComputation::class),
             ])

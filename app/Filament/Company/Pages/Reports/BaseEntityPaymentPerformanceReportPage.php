@@ -46,7 +46,7 @@ abstract class BaseEntityPaymentPerformanceReportPage extends BaseReportPage
                 ->label($this->getEntityType()->getLabel())
                 ->alignment(Alignment::Left),
             Column::make('total_documents')
-                ->label("Total {$this->getDocumentType()->getPluralLabel()}")
+                ->label(translate('Total :documents', ['documents' => translate($this->getDocumentType()->getPluralLabel())]))
                 ->alignment(Alignment::Right),
             Column::make('on_time_count')
                 ->label(translate('Paid On Time'))

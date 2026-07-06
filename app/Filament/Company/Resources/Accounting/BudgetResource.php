@@ -351,7 +351,7 @@ class BudgetResource extends Resource
                                         })->toArray(),
                                     ])
                                     ->spreadsheet()
-                                    ->itemLabel(fn (BudgetItem $record) => $record->account->name ?? 'Budget Item')
+                                    ->itemLabel(fn (BudgetItem $record) => $record->account->name ?? translate('Budget Item'))
                                     ->deletable(false)
                                     ->reorderable(false)
                                     ->addable(false) // Don't allow adding new budget items

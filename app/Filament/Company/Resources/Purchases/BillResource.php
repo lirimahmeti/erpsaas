@@ -50,17 +50,17 @@ class BillResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return translate('bill');
+        return translate('Vendor Bill');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return translate('bills');
+        return translate('Vendor Bills');
     }
 
     public static function getNavigationLabel(): string
     {
-        return translate('Bills');
+        return translate('Vendor Bills');
     }
 
     public static function form(Form $form): Form
@@ -130,7 +130,7 @@ class BillResource extends Resource
                                                 ->mapWithKeys(function (PaymentTerms $paymentTerm) {
                                                     return [$paymentTerm->value => $paymentTerm->getLabel()];
                                                 })
-                                                ->put('custom', 'Custom')
+                                                ->put('custom', translate('Custom'))
                                                 ->toArray();
                                         })
                                         ->selectablePlaceholder(false)
@@ -214,9 +214,9 @@ class BillResource extends Resource
                                 ];
 
                                 if ($hasDiscounts) {
-                                    $headers[] = Header::make('Adjustments')->width('30%');
+                                    $headers[] = Header::make(translate('Adjustments'))->width('30%');
                                 } else {
-                                    $headers[] = Header::make('Taxes')->width('30%');
+                                    $headers[] = Header::make(translate('Taxes'))->width('30%');
                                 }
 
                                 $headers[] = Header::make($settings->resolveColumnLabel('amount_name', 'Amount'))
@@ -513,21 +513,21 @@ class BillResource extends Resource
                                                 $amount = CurrencyConverter::convertToCents($state, 'USD');
 
                                                 if ($amount <= 0) {
-                                                    return 'Please enter a valid positive amount';
+                                                    return translate('Please enter a valid positive amount');
                                                 }
 
                                                 $newAmountDue = $amountDue - $amount;
 
                                                 return match (true) {
-                                                    $newAmountDue > 0 => 'Amount due after payment will be ' . CurrencyConverter::formatCentsToMoney($newAmountDue, $billCurrency),
-                                                    $newAmountDue === 0 => 'Bill will be fully paid',
-                                                    default => 'Amount exceeds bill total by ' . CurrencyConverter::formatCentsToMoney(abs($newAmountDue), $billCurrency),
+                                                    $newAmountDue > 0 => translate('Amount due after payment will be') . ' ' . CurrencyConverter::formatCentsToMoney($newAmountDue, $billCurrency),
+                                                    $newAmountDue === 0 => translate('Bill will be fully paid'),
+                                                    default => translate('Amount exceeds bill total by') . ' ' . CurrencyConverter::formatCentsToMoney(abs($newAmountDue), $billCurrency),
                                                 };
                                             })
                                             ->rules([
                                                 static fn (): Closure => static function (string $attribute, $value, Closure $fail) {
                                                     if (! CurrencyConverter::isValidAmount($value, 'USD')) {
-                                                        $fail('Please enter a valid amount');
+                                                        $fail(translate('Please enter a valid amount'));
                                                     }
                                                 },
                                             ]),

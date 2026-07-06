@@ -209,14 +209,14 @@ class CreateAdjustmentSelect extends Select
 
     protected function createAdjustmentAction(Action $action): Action
     {
-        $categoryLabel = $this->getCategory()?->getLabel() ?? 'Adjustment';
-        $typeLabel = $this->getType()?->getLabel() ?? '';
+        $categoryLabel = translate($this->getCategory()?->getLabel() ?? 'Adjustment');
+        $typeLabel = filled($typeLabel = $this->getType()?->getLabel()) ? translate($typeLabel) : '';
         $label = strtolower(trim($typeLabel . ' ' . $categoryLabel));
 
         return $action
-            ->label('Create ' . $label)
+            ->label(translate('Create') . ' ' . $label)
             ->slideOver()
             ->modalWidth(MaxWidth::ExtraLarge)
-            ->modalHeading('Create a new ' . $label);
+            ->modalHeading(translate('Create a new') . ' ' . $label);
     }
 }

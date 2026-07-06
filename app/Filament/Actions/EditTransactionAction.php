@@ -24,8 +24,8 @@ class EditTransactionAction extends EditAction
 
         $this->label(function () {
             return match ($this->getTransactionType()) {
-                TransactionType::Journal => 'Edit journal entry',
-                default => 'Edit transaction',
+                TransactionType::Journal => translate('Edit journal entry'),
+                default => translate('Edit transaction'),
             };
         });
 

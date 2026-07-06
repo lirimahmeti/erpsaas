@@ -77,7 +77,7 @@ class ViewEstimate extends ViewRecord
                             return "<span class='font-medium'>{$name}</span>";
                         })->join(', ');
 
-                        $output = "<p class='text-sm'>This estimate contains inactive adjustments that need to be addressed before approval: {$adjustmentsList}</p>";
+                        $output = "<p class='text-sm'>".translate('This estimate contains inactive adjustments that need to be addressed before approval').": {$adjustmentsList}</p>";
 
                         return new HtmlString($output);
                     }),

@@ -25,6 +25,11 @@ class PaymentsRelationManager extends RelationManager
 
     protected static ?string $modelLabel = 'Payment';
 
+    public static function getModelLabel(): string
+    {
+        return translate(static::$modelLabel);
+    }
+
     protected $listeners = [
         'refresh' => '$refresh',
     ];
@@ -88,7 +93,7 @@ class PaymentsRelationManager extends RelationManager
                                 $amount = CurrencyConverter::convertToCents($state, 'USD');
 
                                 if ($amount <= 0) {
-                                    return 'Please enter a valid positive amount';
+                                    return translate('Please enter a valid positive amount');
                                 }
 
                                 $currentPaymentAmount = $record?->amount ?? 0;
@@ -96,15 +101,15 @@ class PaymentsRelationManager extends RelationManager
                                 $newAmountDue = $amountDue - $amount + $currentPaymentAmount;
 
                                 return match (true) {
-                                    $newAmountDue > 0 => 'Amount due after payment will be ' . CurrencyConverter::formatCentsToMoney($newAmountDue, $billCurrency),
-                                    $newAmountDue === 0 => 'Bill will be fully paid',
-                                    default => 'Amount exceeds bill total by ' . CurrencyConverter::formatCentsToMoney(abs($newAmountDue), $billCurrency),
+                                    $newAmountDue > 0 => translate('Amount due after payment will be') . ' ' . CurrencyConverter::formatCentsToMoney($newAmountDue, $billCurrency),
+                                    $newAmountDue === 0 => translate('Bill will be fully paid'),
+                                    default => translate('Amount exceeds bill total by') . ' ' . CurrencyConverter::formatCentsToMoney(abs($newAmountDue), $billCurrency),
                                 };
                             })
                             ->rules([
                                 static fn (): Closure => static function (string $attribute, $value, Closure $fail) {
                                     if (! CurrencyConverter::isValidAmount($value, 'USD')) {
-                                        $fail('Please enter a valid amount');
+                                        $fail(translate('Please enter a valid amount'));
                                     }
                                 },
                             ]),

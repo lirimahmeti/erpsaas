@@ -177,7 +177,7 @@ trait HasTransactionAction
 
     protected function getJournalTransactionFormEditTab(): Forms\Components\Tabs\Tab
     {
-        return Forms\Components\Tabs\Tab::make('Edit')
+        return Forms\Components\Tabs\Tab::make(translate('Edit'))
             ->label(translate('Edit'))
             ->icon('heroicon-o-pencil-square')
             ->schema([
@@ -188,7 +188,7 @@ trait HasTransactionAction
 
     protected function getJournalTransactionFormNotesTab(): Forms\Components\Tabs\Tab
     {
-        return Forms\Components\Tabs\Tab::make('Notes')
+        return Forms\Components\Tabs\Tab::make(translate('Notes'))
             ->label(translate('Notes'))
             ->icon('heroicon-o-clipboard')
             ->id('notes')
@@ -244,7 +244,7 @@ trait HasTransactionAction
                 function () {
                     return function (string $attribute, $value, \Closure $fail) {
                         if (empty($value) || ! is_array($value)) {
-                            $fail('Journal entries are required.');
+                            $fail(translate('Journal entries are required.'));
 
                             return;
                         }
@@ -272,17 +272,20 @@ trait HasTransactionAction
                         }
 
                         if (! $hasDebit) {
-                            $fail('At least one debit entry is required.');
+                            $fail(translate('At least one debit entry is required.'));
                         }
 
                         if (! $hasCredit) {
-                            $fail('At least one credit entry is required.');
+                            $fail(translate('At least one credit entry is required.'));
                         }
 
                         if ($totalDebits !== $totalCredits) {
                             $debitFormatted = CurrencyConverter::formatCentsToMoney($totalDebits, CurrencyAccessor::getDefaultCurrency());
                             $creditFormatted = CurrencyConverter::formatCentsToMoney($totalCredits, CurrencyAccessor::getDefaultCurrency());
-                            $fail("Total debits ({$debitFormatted}) must equal total credits ({$creditFormatted}).");
+                            $fail(translate('Total debits (:debits) must equal total credits (:credits).', [
+                                'debits' => $debitFormatted,
+                                'credits' => $creditFormatted,
+                            ]));
                         }
                     };
                 },
@@ -349,6 +352,7 @@ trait HasTransactionAction
         $typeLabel = $type->getLabel();
 
         return FormAction::make("add{$typeLabel}Entry")
+            ->label(translate('Add :type entry', ['type' => translate($typeLabel)]))
             ->button()
             ->outlined()
             ->color($type->isDebit() ? 'primary' : 'gray')

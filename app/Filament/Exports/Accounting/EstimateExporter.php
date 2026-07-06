@@ -14,39 +14,58 @@ class EstimateExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            ExportColumn::make('estimate_number'),
+            ExportColumn::make('estimate_number')
+                ->label(translate('Estimate number')),
             ExportColumn::make('date')
+                ->label(translate('Date'))
                 ->date(),
             ExportColumn::make('expiration_date')
+                ->label(translate('Expiration date'))
                 ->date(),
-            ExportColumn::make('client.name'),
+            ExportColumn::make('client.name')
+                ->label(translate('Client')),
             ExportColumn::make('status')
+                ->label(translate('Status'))
                 ->enum(),
             ExportColumn::make('total')
+                ->label(translate('Total'))
                 ->money(),
             ExportColumn::make('subtotal')
+                ->label(translate('Subtotal'))
                 ->money(),
             ExportColumn::make('tax_total')
+                ->label(translate('Tax total'))
                 ->money(),
             ExportColumn::make('discount_total')
+                ->label(translate('Discount total'))
                 ->money(),
-            ExportColumn::make('discount_rate'),
-            ExportColumn::make('currency_code'),
-            ExportColumn::make('reference_number'),
+            ExportColumn::make('discount_rate')
+                ->label(translate('Discount rate')),
+            ExportColumn::make('currency_code')
+                ->label(translate('Currency code')),
+            ExportColumn::make('reference_number')
+                ->label(translate('Reference number')),
             ExportColumn::make('approved_at')
+                ->label(translate('Approved at'))
                 ->dateTime(),
             ExportColumn::make('accepted_at')
+                ->label(translate('Accepted at'))
                 ->dateTime(),
             ExportColumn::make('declined_at')
+                ->label(translate('Declined at'))
                 ->dateTime(),
             ExportColumn::make('converted_at')
+                ->label(translate('Converted at'))
                 ->dateTime(),
             ExportColumn::make('last_sent_at')
+                ->label(translate('Last sent at'))
                 ->dateTime(),
             ExportColumn::make('discount_method')
+                ->label(translate('Discount method'))
                 ->enabledByDefault(false)
                 ->enum(),
             ExportColumn::make('discount_computation')
+                ->label(translate('Discount computation'))
                 ->enabledByDefault(false)
                 ->enum(),
         ];
@@ -54,10 +73,16 @@ class EstimateExporter extends Exporter
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Your estimate export has completed and ' . number_format($export->successful_rows) . ' ' . str('row')->plural($export->successful_rows) . ' exported.';
+        $body = translate('Your estimate export has completed and :count :rows exported.', [
+            'count' => number_format($export->successful_rows),
+            'rows' => translate(str('row')->plural($export->successful_rows)->toString()),
+        ]);
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to export.';
+            $body .= ' '.translate(':count :rows failed to export.', [
+                'count' => number_format($failedRowsCount),
+                'rows' => translate(str('row')->plural($failedRowsCount)->toString()),
+            ]);
         }
 
         return $body;

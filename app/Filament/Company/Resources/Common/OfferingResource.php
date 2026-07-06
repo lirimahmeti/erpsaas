@@ -66,7 +66,7 @@ class OfferingResource extends Resource
                             return "<span class='font-medium'>{$name}</span>";
                         })->join(', ');
 
-                        $output = "<p class='text-sm'>This offering contains inactive adjustments that need to be addressed: {$adjustmentsList}</p>";
+                        $output = "<p class='text-sm'>".translate('This offering contains inactive adjustments that need to be addressed').": {$adjustmentsList}</p>";
 
                         return new HtmlString($output);
                     }),
@@ -84,6 +84,7 @@ class OfferingResource extends Resource
             ->schema([
                 RadioDeck::make('type')
                     ->options(OfferingType::class)
+                    ->label(translate('Type'))
                     ->default(OfferingType::Product)
                     ->icons(OfferingType::class)
                     ->color('primary')
@@ -91,10 +92,12 @@ class OfferingResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('name')
                     ->autofocus()
+                    ->label(translate('Name'))
                     ->required()
                     ->columnStart(1)
                     ->maxLength(255),
                 Forms\Components\TextInput::make('price')
+                    ->label(translate('Price'))
                     ->required()
                     ->money(),
                 Forms\Components\Textarea::make('description')
@@ -103,16 +106,17 @@ class OfferingResource extends Resource
                     ->rows(3),
                 Forms\Components\CheckboxList::make('attributes')
                     ->options([
-                        'Sellable' => 'Sellable',
-                        'Purchasable' => 'Purchasable',
+                        'Sellable' => translate('Sellable'),
+                        'Purchasable' => translate('Purchasable'),
                     ])
                     ->visible($hasAttributeChoices)
+                    ->label(translate('Attributes'))
                     ->hiddenLabel()
                     ->required()
                     ->live()
                     ->bulkToggleable()
                     ->validationMessages([
-                        'required' => 'The offering must be either sellable or purchasable.',
+                        'required' => translate('The offering must be either sellable or purchasable.'),
                     ]),
             ])->columns();
     }
@@ -127,7 +131,7 @@ class OfferingResource extends Resource
                     ->type(AccountType::OperatingRevenue)
                     ->required()
                     ->validationMessages([
-                        'required' => 'The income account is required for sellable offerings.',
+                        'required' => translate('The income account is required for sellable offerings.'),
                     ]),
                 CreateAdjustmentSelect::make('salesTaxes')
                     ->label(translate('Sales tax'))
@@ -154,7 +158,7 @@ class OfferingResource extends Resource
                     ->type(AccountType::OperatingExpense)
                     ->required()
                     ->validationMessages([
-                        'required' => 'The expense account is required for purchasable offerings.',
+                        'required' => translate('The expense account is required for purchasable offerings.'),
                     ]),
                 CreateAdjustmentSelect::make('purchaseTaxes')
                     ->label(translate('Purchase tax'))
@@ -188,11 +192,19 @@ class OfferingResource extends Resource
                     ->label(translate('Name')),
                 Tables\Columns\TextColumn::make('attributes')
                     ->label(translate('Attributes'))
+                    ->formatStateUsing(static fn (?string $state): ?string => filled($state)
+                        ? collect(explode(' & ', $state))
+                            ->map(static fn (string $attribute): string => translate($attribute))
+                            ->join(' & ')
+                        : null)
                     ->badge(),
                 Tables\Columns\TextColumn::make('type')
+                    ->label(translate('Type'))
+                    ->formatStateUsing(fn (OfferingType $state) => translate($state->name))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('price')
                     ->currency()
+                    ->label(translate('Price'))
                     ->sortable()
                     ->description(function (Offering $record) {
                         $adjustments = $record->adjustments()

@@ -26,6 +26,7 @@ class DocumentFooterSection extends Section
 
         $this->schema([
             Textarea::make('footer')
+                ->localizeLabel()
                 ->default(fn () => $this->getDefaultFooter())
                 ->columnSpanFull(),
         ]);

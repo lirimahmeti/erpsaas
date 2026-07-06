@@ -3,6 +3,7 @@
 namespace App\Filament\Company\Resources\Sales\InvoiceResource\Pages;
 
 use App\Enums\Accounting\DocumentType;
+use App\Enums\Accounting\InvoiceStatus;
 use App\Filament\Company\Resources\Sales\ClientResource;
 use App\Filament\Company\Resources\Sales\InvoiceResource;
 use App\Filament\Infolists\Components\BannerEntry;
@@ -74,7 +75,7 @@ class ViewInvoice extends ViewRecord
                             return "<span class='font-medium'>{$name}</span>";
                         })->join(', ');
 
-                        $output = "<p class='text-sm'>This invoice contains inactive adjustments that need to be addressed before approval: {$adjustmentsList}</p>";
+                        $output = "<p class='text-sm'>".translate('This invoice contains inactive adjustments that need to be addressed before approval').": {$adjustmentsList}</p>";
 
                         return new HtmlString($output);
                     }),
@@ -86,6 +87,8 @@ class ViewInvoice extends ViewRecord
                                 TextEntry::make('invoice_number')
                                     ->label(translate('Invoice #')),
                                 TextEntry::make('status')
+                                    ->label(translate('Status'))
+                                    ->formatStateUsing(fn (InvoiceStatus $state) => translate($state->name))
                                     ->badge(),
                                 TextEntry::make('client.name')
                                     ->label(translate('Client'))
@@ -95,7 +98,7 @@ class ViewInvoice extends ViewRecord
                                     ->label(translate('Amount due'))
                                     ->currency(static fn (Invoice $record) => $record->currency_code),
                                 TextEntry::make('due_date')
-                                    ->label(translate('Due'))
+                                    ->label(translate('Payment Due Date'))
                                     ->asRelativeDay(),
                                 TextEntry::make('approved_at')
                                     ->label(translate('Approved at'))

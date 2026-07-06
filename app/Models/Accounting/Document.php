@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Js;
 use Livewire\Component;
 
 abstract class Document extends Model
@@ -54,8 +55,9 @@ abstract class Document extends Model
                     'documentType' => $record::documentType(),
                     'id' => $record->id,
                 ]);
+                $title = translate($record::documentType()->getLabel()) . " #{$record->documentNumber()}";
 
-                $livewire->js("window.printPdf('{$url}', '{$record::documentType()->getLabel()} #{$record->documentNumber()}'); ");
+                $livewire->js('window.printPdf(' . Js::from($url) . ', ' . Js::from($title) . ');');
             });
     }
 

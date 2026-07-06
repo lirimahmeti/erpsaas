@@ -42,6 +42,8 @@ class PayBills extends ListRecords
 
     public ?array $data = [];
 
+    public ?int $allocationAmount = null;
+
     public function getBreadcrumb(): ?string
     {
         return translate('Pay');
@@ -56,15 +58,22 @@ class PayBills extends ListRecords
     {
         parent::mount();
 
-        $this->form->fill();
+        $preservedVendorId = $this->tableFilters['vendor_id']['value'] ?? null;
+        $preservedCurrencyCode = $this->tableFilters['currency_code']['value'] ?? CurrencyAccessor::getDefaultCurrency();
 
-        $this->reset('tableFilters');
+        $this->tableFilters = [
+            'vendor_id' => $preservedVendorId ? ['value' => $preservedVendorId] : [],
+            'currency_code' => ['value' => $preservedCurrencyCode],
+        ];
+
+        $this->form->fill();
     }
 
     protected function getHeaderActions(): array
     {
         return [
             Actions\Action::make('processPayments')
+                ->label(translate('Process payments'))
                 ->color('primary')
                 ->requiresConfirmation()
                 ->modalHeading(translate('Confirm payments'))
@@ -124,11 +133,30 @@ class PayBills extends ListRecords
                         ->success()
                         ->send();
 
-                    $this->reset('paymentAmounts');
+                    $this->reset('paymentAmounts', 'allocationAmount');
 
                     $this->resetTable();
                 }),
         ];
+    }
+
+    protected function allocateOldestFirst(Collection $bills, int $amountInCents): void
+    {
+        $remainingAmount = $amountInCents;
+
+        $sortedBills = $bills->sortBy('due_date');
+
+        foreach ($sortedBills as $bill) {
+            if ($remainingAmount <= 0) {
+                break;
+            }
+
+            $amountDue = $bill->amount_due;
+            $allocation = min($remainingAmount, $amountDue);
+
+            $this->paymentAmounts[$bill->id] = $allocation;
+            $remainingAmount -= $allocation;
+        }
     }
 
     /**
@@ -146,7 +174,7 @@ class PayBills extends ListRecords
         return $form
             ->live()
             ->schema([
-                Forms\Components\Grid::make(3)
+                Forms\Components\Grid::make(2)
                     ->schema([
                         Forms\Components\Select::make('bank_account_id')
                             ->label(translate('Account'))
@@ -167,6 +195,27 @@ class PayBills extends ListRecords
                             ->options(PaymentMethod::class)
                             ->default(PaymentMethod::BankPayment)
                             ->softRequired(),
+                        Forms\Components\TextInput::make('allocation_amount')
+                            ->label(translate('Allocate Payment Amount'))
+                            ->default(array_sum($this->paymentAmounts))
+                            ->money($this->getTableFilterState('currency_code')['value'])
+                            ->extraAlpineAttributes([
+                                'x-on:keydown.enter.prevent' => '$refs.allocate.click()',
+                            ])
+                            ->suffixAction(
+                                Forms\Components\Actions\Action::make('allocate')
+                                    ->icon('heroicon-m-calculator')
+                                    ->extraAttributes([
+                                        'x-ref' => 'allocate',
+                                    ])
+                                    ->action(function ($state) {
+                                        $this->allocationAmount = CurrencyConverter::convertToCents($state, 'USD');
+
+                                        if ($this->allocationAmount) {
+                                            $this->allocateOldestFirst($this->getTableRecords(), $this->allocationAmount);
+                                        }
+                                    }),
+                            ),
                     ]),
             ])->statePath('data');
     }
@@ -375,6 +424,22 @@ class PayBills extends ListRecords
         return $bankAccount ?: BankAccount::where('enabled', true)->first();
     }
 
+    public function resetTableFiltersForm(): void
+    {
+        parent::resetTableFiltersForm();
+
+        $this->paymentAmounts = [];
+        $this->allocationAmount = null;
+    }
+
+    public function removeTableFilters(): void
+    {
+        parent::removeTableFilters();
+
+        $this->paymentAmounts = [];
+        $this->allocationAmount = null;
+    }
+
     protected function handleTableFilterUpdates(): void
     {
         parent::handleTableFilterUpdates();
@@ -383,5 +448,6 @@ class PayBills extends ListRecords
         $visibleBillKeys = array_flip($visibleBillIds);
 
         $this->paymentAmounts = array_intersect_key($this->paymentAmounts, $visibleBillKeys);
+        $this->allocationAmount = null;
     }
 }

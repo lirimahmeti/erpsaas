@@ -39,9 +39,17 @@ class TransactionResource extends Resource
 
     public static function getModelLabel(): string
     {
-        $modelLabel = static::$modelLabel;
+        return translate('Transaction');
+    }
 
-        return translate($modelLabel);
+    public static function getPluralModelLabel(): string
+    {
+        return translate('Transactions');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return translate('Transactions');
     }
 
     public static function form(Form $form): Form
@@ -90,10 +98,10 @@ class TransactionResource extends Resource
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('account.name')
                     ->label(translate('Category'))
-                    ->prefix(static fn (Transaction $transaction) => $transaction->type->isTransfer() ? 'Transfer to ' : null)
+                    ->prefix(static fn (Transaction $transaction) => $transaction->type->isTransfer() ? translate('Transfer to') . ' ' : null)
                     ->searchable()
                     ->toggleable()
-                    ->state(static fn (Transaction $transaction) => $transaction->account->name ?? 'Journal Entry'),
+                    ->state(static fn (Transaction $transaction) => $transaction->account->name ?? translate('Journal Entry')),
                 Tables\Columns\TextColumn::make('amount')
                     ->label(translate('Amount'))
                     ->weight(static fn (Transaction $transaction) => $transaction->reviewed ? null : FontWeight::SemiBold)
@@ -146,8 +154,8 @@ class TransactionResource extends Resource
                                 ->where('payeeable_id', $id);
                         }
                     }),
-                static::buildDateRangeFilter('posted_at', 'Posted', true),
-                static::buildDateRangeFilter('updated_at', 'Last modified'),
+                static::buildDateRangeFilter('posted_at', translate('Posted'), true),
+                static::buildDateRangeFilter('updated_at', translate('Last modified')),
             ])
             ->filtersFormSchema(fn (array $filters): array => [
                 Grid::make()
@@ -180,9 +188,9 @@ class TransactionResource extends Resource
                         'uncategorized' => 'gray',
                     })
                     ->tooltip(static fn (Transaction $transaction, Tables\Actions\Action $action) => match (static::determineTransactionState($transaction, $action)) {
-                        'reviewed' => 'Reviewed',
-                        'unreviewed' => 'Mark as reviewed',
-                        'uncategorized' => 'Categorize first to mark as reviewed',
+                        'reviewed' => translate('Reviewed'),
+                        'unreviewed' => translate('Mark as reviewed'),
+                        'uncategorized' => translate('Categorize first to mark as reviewed'),
                     })
                     ->disabled(fn (Transaction $transaction): bool => $transaction->isUncategorized())
                     ->action(fn (Transaction $transaction) => $transaction->update(['reviewed' => ! $transaction->reviewed])),
@@ -193,7 +201,7 @@ class TransactionResource extends Resource
                             ->excludeAttributes(['created_by', 'updated_by', 'created_at', 'updated_at'])
                             ->modal(false)
                             ->beforeReplicaSaved(static function (Transaction $replica) {
-                                $replica->description = '(Copy of) ' . $replica->description;
+                                $replica->description = translate('(Copy of) :description', ['description' => $replica->description]);
                             })
                             ->hidden(static fn (Transaction $transaction) => $transaction->transactionable_id)
                             ->after(static function (Transaction $original, Transaction $replica) {
@@ -221,7 +229,7 @@ class TransactionResource extends Resource
                         ->deselectRecordsAfterCompletion()
                         ->excludeAttributes(['created_by', 'updated_by', 'created_at', 'updated_at'])
                         ->beforeReplicaSaved(static function (Transaction $replica) {
-                            $replica->description = '(Copy of) ' . $replica->description;
+                            $replica->description = translate('(Copy of) :description', ['description' => $replica->description]);
                         })
                         ->before(function (Collection $records, ReplicateBulkAction $action) {
                             $isInvalid = $records->contains(fn (Transaction $record) => $record->transactionable_id);
@@ -275,13 +283,13 @@ class TransactionResource extends Resource
                             ->startDateField("{$fieldPrefix}_start_date")
                             ->endDateField("{$fieldPrefix}_end_date"),
                         DatePicker::make("{$fieldPrefix}_start_date")
-                            ->label("{$label} from")
+                            ->label(translate(':label from', ['label' => $label]))
                             ->columnStart(1)
                             ->afterStateUpdated(static function (Set $set) use ($fieldPrefix) {
                                 $set("{$fieldPrefix}_date_range", 'Custom');
                             }),
                         DatePicker::make("{$fieldPrefix}_end_date")
-                            ->label("{$label} to")
+                            ->label(translate(':label to', ['label' => $label]))
                             ->afterStateUpdated(static function (Set $set) use ($fieldPrefix) {
                                 $set("{$fieldPrefix}_date_range", 'Custom');
                             }),

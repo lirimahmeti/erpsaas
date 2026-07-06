@@ -14,16 +14,20 @@ class ClientExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            ExportColumn::make('name'),
-            ExportColumn::make('account_number'),
+            ExportColumn::make('name')
+                ->label(translate('Name')),
+            ExportColumn::make('account_number')
+                ->label(translate('Account number')),
             ExportColumn::make('primaryContact.full_name')
                 ->label(translate('Primary contact')),
             ExportColumn::make('primaryContact.email')
                 ->label(translate('Email')),
             ExportColumn::make('primaryContact.first_available_phone')
                 ->label(translate('Phone')),
-            ExportColumn::make('currency_code'),
+            ExportColumn::make('currency_code')
+                ->label(translate('Currency code')),
             ExportColumn::make('balance') // TODO: Potentially find an easier way to calculate this
+                ->label(translate('Balance'))
                 ->state(function (Client $record) {
                     return $record->invoices()
                         ->unpaid()
@@ -32,6 +36,7 @@ class ClientExporter extends Exporter
                 })
                 ->money(),
             ExportColumn::make('overdue_amount')
+                ->label(translate('Overdue amount'))
                 ->state(function (Client $record) {
                     return $record->invoices()
                         ->overdue()
@@ -85,18 +90,26 @@ class ClientExporter extends Exporter
                 ->label(translate('Delivery instructions'))
                 ->enabledByDefault(false),
             ExportColumn::make('website')
+                ->label(translate('Website'))
                 ->enabledByDefault(false),
             ExportColumn::make('notes')
+                ->label(translate('Notes'))
                 ->enabledByDefault(false),
         ];
     }
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Your client export has completed and ' . number_format($export->successful_rows) . ' ' . str('row')->plural($export->successful_rows) . ' exported.';
+        $body = translate('Your client export has completed and :count :rows exported.', [
+            'count' => number_format($export->successful_rows),
+            'rows' => translate(str('row')->plural($export->successful_rows)->toString()),
+        ]);
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to export.';
+            $body .= ' '.translate(':count :rows failed to export.', [
+                'count' => number_format($failedRowsCount),
+                'rows' => translate(str('row')->plural($failedRowsCount)->toString()),
+            ]);
         }
 
         return $body;

@@ -29,9 +29,9 @@
         <div class="flex justify-between items-end">
             <!-- Billing Details -->
             <div class="text-sm">
-                <h3 class="text-gray-600 font-medium mb-1">BILL TO</h3>
+                <h3 class="text-gray-600 font-medium mb-1">{{ translate('BILL TO') }}</h3>
                 <p class="text-sm font-bold"
-                   style="color: {{ $document->accentColor }}">{{ $document->client?->name ?? 'Client Not Found' }}</p>
+                   style="color: {{ $document->accentColor }}">{{ $document->client?->name ?? translate('Client Not Found') }}</p>
 
                 @if($document->client && ($formattedAddress = $document->client->getFormattedAddressHtml()))
                     {!! $formattedAddress !!}
@@ -95,14 +95,14 @@
             @if($document->subtotal)
                 <tr>
                     <td class="pl-6 py-2" colspan="2"></td>
-                    <td class="text-right font-semibold py-2">Subtotal:</td>
+                    <td class="text-right font-semibold py-2">{{ translate('Subtotal') }}:</td>
                     <td class="text-right pr-6 py-2">{{ $document->subtotal }}</td>
                 </tr>
             @endif
             @if($document->discount)
                 <tr class="text-success-800">
                     <td class="pl-6 py-2" colspan="2"></td>
-                    <td class="text-right py-2">Discount:</td>
+                    <td class="text-right py-2">{{ translate('Discount') }}:</td>
                     <td class="text-right pr-6 py-2">
                         ({{ $document->discount }})
                     </td>
@@ -111,13 +111,13 @@
             @if($document->tax)
                 <tr>
                     <td class="pl-6 py-2" colspan="2"></td>
-                    <td class="text-right py-2">Tax:</td>
+                    <td class="text-right py-2">{{ translate('Tax') }}:</td>
                     <td class="text-right pr-6 py-2">{{ $document->tax }}</td>
                 </tr>
             @endif
             <tr>
                 <td class="pl-6 py-2" colspan="2"></td>
-                <td class="text-right font-semibold border-t py-2">{{ $document->amountDue ? 'Total' : 'Grand Total' }}:</td>
+                <td class="text-right font-semibold border-t py-2">{{ translate($document->amountDue ? 'Total' : 'Grand Total') }}:</td>
                 <td class="text-right border-t pr-6 py-2">{{ $document->total }}</td>
             </tr>
             @if($document->amountDue)
@@ -136,7 +136,7 @@
     <!-- Footer Notes -->
     <x-company.document-template.footer class="modern-template-footer">
         <h4 class="font-semibold px-6 text-sm" style="color: {{ $document->accentColor }}">
-            Terms & Conditions
+            {{ translate('Terms & Conditions') }}
         </h4>
         <span class="border-t-2 my-2 border-gray-300 block w-full"></span>
         <div class="flex justify-between space-x-4 px-6 text-sm">

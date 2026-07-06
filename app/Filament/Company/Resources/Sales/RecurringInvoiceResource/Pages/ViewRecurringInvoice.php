@@ -73,7 +73,7 @@ class ViewRecurringInvoice extends ViewRecord
                             return "<span class='font-medium'>{$name}</span>";
                         })->join(', ');
 
-                        $output = "<p class='text-sm'>This recurring invoice contains inactive adjustments that need to be addressed before approval: {$adjustmentsList}</p>";
+                        $output = "<p class='text-sm'>".translate('This recurring invoice contains inactive adjustments that need to be addressed before approval').": {$adjustmentsList}</p>";
 
                         return new HtmlString($output);
                     }),
@@ -132,7 +132,7 @@ class ViewRecurringInvoice extends ViewRecord
                                     ->visible(static fn (RecurringInvoice $record) => $record->occurrences_count > 0)
                                     ->color('primary')
                                     ->weight(FontWeight::SemiBold)
-                                    ->suffix(fn (RecurringInvoice $record) => Str::of(' invoice')->plural($record->occurrences_count))
+                                    ->suffix(fn (RecurringInvoice $record) => ' '.translate(Str::of('invoice')->plural($record->occurrences_count)->toString()))
                                     ->url(static function (RecurringInvoice $record) {
                                         return ListInvoices::getUrl(['recurringInvoice' => $record->id]);
                                     }),

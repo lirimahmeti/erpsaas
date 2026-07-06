@@ -24,9 +24,17 @@ class CurrencyResource extends Resource
 
     public static function getModelLabel(): string
     {
-        $modelLabel = static::$modelLabel;
+        return translate('Currency');
+    }
 
-        return translate($modelLabel);
+    public static function getPluralModelLabel(): string
+    {
+        return translate('Currencies');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return translate('Currencies');
     }
 
     public static function form(Form $form): Form

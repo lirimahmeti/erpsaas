@@ -33,10 +33,10 @@ class EstimateOverview extends EnhancedStatsOverviewWidget
                 : 0;
 
             return [
-                EnhancedStatsOverviewWidget\EnhancedStat::make('Active Estimates', '-'),
-                EnhancedStatsOverviewWidget\EnhancedStat::make('Accepted Estimates', '-'),
-                EnhancedStatsOverviewWidget\EnhancedStat::make('Converted Estimates', '-'),
-                EnhancedStatsOverviewWidget\EnhancedStat::make('Average Estimate Total', CurrencyConverter::formatCentsToMoney($averageDraftTotal))
+                EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Active Estimates'), '-'),
+                EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Accepted Estimates'), '-'),
+                EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Converted Estimates'), '-'),
+                EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Average Estimate Total'), CurrencyConverter::formatCentsToMoney($averageDraftTotal))
                     ->suffix(CurrencyAccessor::getDefaultCurrency()),
             ];
         }
@@ -78,26 +78,26 @@ class EstimateOverview extends EnhancedStatsOverviewWidget
                 ? Number::percentage(($totalConvertedCount / $totalValidEstimatesCount) * 100, maxPrecision: 1)
                 : Number::percentage(0, maxPrecision: 1);
 
-            $percentConvertedSuffix = 'converted';
-            $percentConvertedDescription = $totalConvertedCount . ' converted';
+            $percentConvertedSuffix = translate('converted');
+            $percentConvertedDescription = $totalConvertedCount . ' ' . translate('converted');
         }
 
         return [
-            EnhancedStatsOverviewWidget\EnhancedStat::make('Active Estimates', CurrencyConverter::formatCentsToMoney($totalActiveAmount))
+            EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Active Estimates'), CurrencyConverter::formatCentsToMoney($totalActiveAmount))
                 ->suffix(CurrencyAccessor::getDefaultCurrency())
-                ->description($totalActiveCount . ' active estimates'),
+                ->description($totalActiveCount . ' ' . translate('active estimates')),
 
-            EnhancedStatsOverviewWidget\EnhancedStat::make('Accepted Estimates', CurrencyConverter::formatCentsToMoney($totalAcceptedAmount))
+            EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Accepted Estimates'), CurrencyConverter::formatCentsToMoney($totalAcceptedAmount))
                 ->suffix(CurrencyAccessor::getDefaultCurrency())
-                ->description($totalAcceptedCount . ' accepted'),
+                ->description($totalAcceptedCount . ' ' . translate('accepted')),
 
-            EnhancedStatsOverviewWidget\EnhancedStat::make('Converted Estimates', $percentConverted)
+            EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Converted Estimates'), $percentConverted)
                 ->suffix($percentConvertedSuffix)
                 ->description($percentConvertedDescription),
 
-            EnhancedStatsOverviewWidget\EnhancedStat::make('Average Estimate Total', CurrencyConverter::formatCentsToMoney($averageEstimateTotal))
+            EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Average Estimate Total'), CurrencyConverter::formatCentsToMoney($averageEstimateTotal))
                 ->suffix(CurrencyAccessor::getDefaultCurrency())
-                ->description($activeTab === 'all' ? 'Excludes draft estimates' : null),
+                ->description($activeTab === 'all' ? translate('Excludes draft estimates') : null),
         ];
     }
 }

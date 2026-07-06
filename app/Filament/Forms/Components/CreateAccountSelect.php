@@ -143,7 +143,7 @@ class CreateAccountSelect extends Select
             TextInput::make('code')
                 ->label(translate('Code'))
                 ->required()
-                ->validationAttribute('account code')
+                ->validationAttribute(translate('account code'))
                 ->unique(table: Account::class, column: 'code')
                 ->validateAccountCode(static fn (Get $get) => $get('subtype_id')),
 

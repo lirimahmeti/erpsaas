@@ -21,10 +21,10 @@ readonly class DocumentPreviewDTO extends DocumentDTO
             null;
 
         return new self(
-            header: $data['header'] ?? $settings->header ?? 'Invoice',
-            subheader: $data['subheader'] ?? $settings->subheader,
-            footer: $data['footer'] ?? $settings->footer,
-            terms: $data['terms'] ?? $settings->terms,
+            header: translate($data['header'] ?? $settings->header ?? 'Invoice'),
+            subheader: filled($subheader = $data['subheader'] ?? $settings->subheader) ? translate($subheader) : null,
+            footer: filled($footer = $data['footer'] ?? $settings->footer) ? translate($footer) : null,
+            terms: filled($terms = $data['terms'] ?? $settings->terms) ? translate($terms) : null,
             logo: $settings->logo_url,
             number: self::generatePreviewNumber($settings, $data),
             referenceNumber: $settings->getNumberNext('ORD-'),

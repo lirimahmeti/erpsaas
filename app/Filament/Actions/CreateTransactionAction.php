@@ -41,8 +41,8 @@ class CreateTransactionAction extends CreateAction
 
         $this->modalHeading(function (): string {
             return match ($this->getTransactionType()) {
-                TransactionType::Journal => 'Create journal entry',
-                default => 'Create transaction',
+                TransactionType::Journal => translate('Create journal entry'),
+                default => translate('Create transaction'),
             };
         });
 

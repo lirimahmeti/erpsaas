@@ -32,13 +32,13 @@ class ReplicateBulkAction extends BulkAction implements ReplicatesRecords
     {
         parent::setUp();
 
-        $this->label(__('Replicate Selected'));
+        $this->label(translate('Replicate Selected'));
 
-        $this->modalHeading(fn (): string => __('Replicate selected :label', ['label' => $this->getPluralModelLabel()]));
+        $this->modalHeading(fn (): string => translate('Replicate selected :label', ['label' => $this->getPluralModelLabel()]));
 
-        $this->modalSubmitActionLabel(__('Replicate'));
+        $this->modalSubmitActionLabel(translate('Replicate'));
 
-        $this->successNotificationTitle(__('Replicated'));
+        $this->successNotificationTitle(translate('Replicated'));
 
         $this->icon('heroicon-m-square-3-stack-3d');
 

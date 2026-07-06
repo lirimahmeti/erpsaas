@@ -65,14 +65,14 @@ class InvoiceOverview extends EnhancedStatsOverviewWidget
         $averagePaymentTimeFormatted = Number::format($averagePaymentTime ?? 0, maxPrecision: 1);
 
         return [
-            EnhancedStatsOverviewWidget\EnhancedStat::make('Total Unpaid', CurrencyConverter::formatCentsToMoney($amountUnpaid))
+            EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Total Unpaid'), CurrencyConverter::formatCentsToMoney($amountUnpaid))
                 ->suffix(CurrencyAccessor::getDefaultCurrency())
-                ->description('Includes ' . CurrencyConverter::formatCentsToMoney($amountOverdue) . ' overdue'),
-            EnhancedStatsOverviewWidget\EnhancedStat::make('Due Within 30 Days', CurrencyConverter::formatCentsToMoney($amountDueWithin30Days))
+                ->description(translate('Includes') . ' ' . CurrencyConverter::formatCentsToMoney($amountOverdue) . ' ' . translate('overdue')),
+            EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Due Within 30 Days'), CurrencyConverter::formatCentsToMoney($amountDueWithin30Days))
                 ->suffix(CurrencyAccessor::getDefaultCurrency()),
-            EnhancedStatsOverviewWidget\EnhancedStat::make('Average Payment Time', $averagePaymentTimeFormatted)
-                ->suffix('days'),
-            EnhancedStatsOverviewWidget\EnhancedStat::make('Average Invoice Total', CurrencyConverter::formatCentsToMoney($averageInvoiceTotal))
+            EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Average Payment Time'), $averagePaymentTimeFormatted)
+                ->suffix(translate('days')),
+            EnhancedStatsOverviewWidget\EnhancedStat::make(translate('Average Invoice Total'), CurrencyConverter::formatCentsToMoney($averageInvoiceTotal))
                 ->suffix(CurrencyAccessor::getDefaultCurrency())
                 ->description(translate('Excludes draft and voided invoices')),
         ];

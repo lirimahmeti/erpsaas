@@ -26,12 +26,20 @@ class AccountResource extends Resource
     protected static ?string $model = BankAccount::class;
 
     protected static ?string $modelLabel = 'account';
-
+    
     public static function getModelLabel(): string
     {
-        $modelLabel = static::$modelLabel;
+        return translate('Bank Account');
+    }
 
-        return translate($modelLabel);
+    public static function getPluralModelLabel(): string
+    {
+        return translate('Bank Accounts');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return translate('Bank Accounts');
     }
 
     public static function form(Form $form): Form
@@ -99,7 +107,7 @@ class AccountResource extends Resource
                                         return $rule->where('company_id', $companyId)->where('number', $state);
                                     })
                                     ->maxLength(20)
-                                    ->validationAttribute('account number'),
+                                    ->validationAttribute(translate('account number')),
                                 ToggleButton::make('enabled')
                                     ->localizeLabel('Default'),
                             ]),
@@ -122,7 +130,7 @@ class AccountResource extends Resource
                     ->searchable()
                     ->weight(FontWeight::Medium)
                     ->icon(static fn (BankAccount $record) => $record->isEnabled() ? 'heroicon-o-lock-closed' : null)
-                    ->tooltip(static fn (BankAccount $record) => $record->isEnabled() ? 'Default Account' : null)
+                    ->tooltip(static fn (BankAccount $record) => $record->isEnabled() ? translate('Default Account') : null)
                     ->iconPosition('after')
                     ->description(static fn (BankAccount $record) => $record->mask ?? null),
                 Tables\Columns\TextColumn::make('account.subtype.name')
