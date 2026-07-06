@@ -35,6 +35,7 @@ class ViewInvoice extends ViewRecord
             Actions\ActionGroup::make([
                 Actions\ActionGroup::make([
                     Invoice::getApproveDraftAction(),
+                    Invoice::getSendInvoiceAction(),
                     Invoice::getMarkAsSentAction(),
                     Invoice::getPrintDocumentAction(),
                     Invoice::getReplicateAction(),

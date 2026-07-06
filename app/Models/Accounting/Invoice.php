@@ -11,6 +11,7 @@ use App\Enums\Accounting\InvoiceStatus;
 use App\Enums\Accounting\JournalEntryType;
 use App\Enums\Accounting\TransactionType;
 use App\Filament\Company\Resources\Sales\InvoiceResource;
+use App\Mail\InvoiceMail;
 use App\Models\Banking\BankAccount;
 use App\Models\Common\Client;
 use App\Models\Company;
@@ -34,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 use Livewire\Component;
@@ -609,6 +611,53 @@ class Invoice extends Document
             })
             ->successNotificationTitle(translate('Invoice sent'))
             ->action(function (self $record, MountableAction $action) {
+                $record->markAsSent();
+
+                $action->success();
+            });
+    }
+
+    public static function getSendInvoiceAction(string $action = Action::class): MountableAction
+    {
+        return $action::make('sendInvoice')
+            ->label(translate('Send invoice'))
+            ->icon('heroicon-m-envelope')
+            ->visible(static function (self $record) {
+                return true;
+            })
+            ->requiresConfirmation()
+            ->modalHeading(translate('Send invoice'))
+            ->modalDescription(static function (self $record): string {
+                $email = $record->client?->primaryContact?->email;
+
+                if (blank($email)) {
+                    return translate('This client does not have a primary contact email address.');
+                }
+
+                return translate('Send invoice #:number to :email?', [
+                    'number' => $record->documentNumber(),
+                    'email' => $email,
+                ]);
+            })
+            ->successNotificationTitle(translate('Invoice sent'))
+            ->action(function (self $record, MountableAction $action) {
+                $email = $record->client?->primaryContact?->email;
+
+                if (blank($email)) {
+                    Notification::make()
+                        ->warning()
+                        ->title(translate('Cannot send invoice'))
+                        ->body(translate('This client does not have a primary contact email address.'))
+                        ->persistent()
+                        ->send();
+
+                    $action->failure();
+
+                    return;
+                }
+
+                Mail::to($email)->send(new InvoiceMail($record));
+
                 $record->markAsSent();
 
                 $action->success();
