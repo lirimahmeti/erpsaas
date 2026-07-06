@@ -24,7 +24,7 @@ readonly class DocumentPreviewDTO extends DocumentDTO
             header: translate($data['header'] ?? $settings->header ?? 'Invoice'),
             subheader: filled($subheader = $data['subheader'] ?? $settings->subheader) ? translate($subheader) : null,
             footer: filled($footer = $data['footer'] ?? $settings->footer) ? translate($footer) : null,
-            terms: filled($terms = $data['terms'] ?? $settings->terms) ? translate($terms) : null,
+            terms: $data['terms'] ?? $settings->terms,
             logo: $settings->logo_url,
             number: self::generatePreviewNumber($settings, $data),
             referenceNumber: $settings->getNumberNext('ORD-'),
