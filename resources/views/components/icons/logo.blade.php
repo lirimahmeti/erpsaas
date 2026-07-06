@@ -14,7 +14,7 @@
         letter-spacing="3"
     >SOFTIX</text>
     <text
-        x="154"
+        x="130"
         y="35"
         font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
         font-size="34"
