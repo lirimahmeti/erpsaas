@@ -36,6 +36,7 @@ class UserPanelProvider extends PanelProvider
         return $panel
             ->id('user')
             ->path('user')
+            ->spa()
             ->plugin(
                 PanelShiftDropdown::make()
                     ->logoutItem()
